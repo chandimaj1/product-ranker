@@ -118,7 +118,7 @@ class headphoneRanker
             value INT(2), 
             principle VARCHAR(100),
             overall_timbre VARCHAR(300),
-            summery TEXT,
+            summary TEXT,
             ganre_focus VARCHAR(300),
             PRIMARY KEY  (id))';
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');

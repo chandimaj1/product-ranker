@@ -12,16 +12,24 @@ function save_settings_table(){
     global $wpdb;
     $msg = 'Error! Unknown';
 
-    if( isset($_POST['username']) && isset($_POST['password']) && isset($_POST['basic']) && isset($_POST['host'])){
-        $table_name = $wpdb->prefix."signnow_bychandimaj";
+    if( isset($_POST['table']) && isset($_POST['id'])  && isset($_POST['device']) && isset($_POST['price']) && isset($_POST['principle']) && isset($_POST['rank'])){
+        $table_name = $wpdb->prefix."hranker_".$_POST['table'];
         $data = array(
-            'id' => 1,
-            'sn_username' => $_POST['username'], 
-            'sn_password' => $_POST['password'],
-            'sn_basic' => $_POST['basic'],
-            'sn_host'=> $_POST['host']
+            'id' => (int)$_POST['id'], 
+            'rank' => $_POST['rank'], 
+            'device' => $_POST['device'],
+            'price' => $_POST['price'],
+            'value'=> $_POST['value'],
+            'principle'=> $_POST['principle'],
+            'overall_timbre'=> $_POST['overall_timbre'],
+            'summary'=> $_POST['summary'],
+            'ganre_focus'=> $_POST['ganre_focus'],
         );
         $data_definitions = array (
+            '%d',
+            '%s',
+            '%s',
+            '%f',
             '%d',
             '%s',
             '%s',

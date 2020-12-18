@@ -26,6 +26,4 @@ foreach ($signNow_files as $signNow_file){
 */
 global $wpdb; //Wordpress  query
 
-$wpdb->query( "DELETE FROM wp_posts WHERE post_type = 'signNow'" );
-$wpdb->query( "DELETE FROM wp_postmeta WHERE post_id NOT IN (SLECT id FROM wp_posts)" ); //since we deleted post type signNow, delete all metadata not matching the existing post types
-$wpdb->query( "DELETE FROM wp_term_relationships WHERE object_id NOT IN (SLECT id FROM wp_posts)" ); //since we deleted post type signNow, delete all metadata not matching the existing post types
+//$wpdb->query( "DELETE FROM wp_posts WHERE post_type = 'signNow'" );
