@@ -20,6 +20,11 @@ function fetch_paginated_result_ids(){
         $where = '';
         $sort = 'ORDER BY id DESC';
 
+        if ( isset($_POST["sort_by"])  &&  isset($_POST["sort_type"]) && $_POST["sort_by"]!="no_sort" &&  $_POST["sort_type"]!="no_sort" ){
+            $sort_by = str_replace("hrt_","",$_POST['sort_by']);
+            $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
+        }
+
         $result = $wpdb->get_results( 
                     "SELECT DISTINCT id FROM $table_name $where $sort"
                 );
@@ -35,7 +40,7 @@ function fetch_paginated_result_ids(){
 
     $result = array_chunk($result, $array_chunk_size);
 
-    $return = array("msg"=>$msg, "paginated_result"=>$result);
+    $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort);
     return ($return);
 }
 $return = fetch_paginated_result_ids();
@@ -45,7 +50,7 @@ $return = fetch_paginated_result_ids();
 
 
 
-function fetch_results_from_ids($page1_ids,$table){
+function fetch_results_from_ids($page1_ids,$table,$sort){
     global $wpdb;
     $msg = 'Error! Unknown';
 
@@ -60,7 +65,7 @@ function fetch_results_from_ids($page1_ids,$table){
         $where .= ' false )';
 
         $result = $wpdb->get_results( 
-                    "SELECT * FROM $table_name $where"
+                    "SELECT * FROM $table_name $where $sort"
                 );
 
         if($result){ 
@@ -75,7 +80,7 @@ function fetch_results_from_ids($page1_ids,$table){
     $return = array("msg"=>$msg, "page1_data"=>$result);
     return ($return);
 }
-$return_page1 = fetch_results_from_ids($return["paginated_result"][0], $_POST["table"]);
+$return_page1 = fetch_results_from_ids($return["paginated_result"][0], $_POST["table"], $return["sort"]);
 
 $msg = [$return, $return_page1];
 

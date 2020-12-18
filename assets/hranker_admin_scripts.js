@@ -466,22 +466,15 @@ function get_table_results(){
 
     hr_status('secondary','Fetching results from database..');
 
-
     let ajax_data = {
         "table":$('#admin_product_select').val(),
         //Sort status
-        "rank" :get_sort_status('hrt_rank'),
-        "device" :get_sort_status('hrt_device'),
-        "price" :get_sort_status('hrt_price'),
-        "value" :get_sort_status('hrt_value'),
-        "principle" :get_sort_status('hrt_principle'),
-        "overall_timbre" :get_sort_status('hrt_overall_timbre'),
-        "summary" :get_sort_status('hrt_summary'),
-        "ganre_focus" :get_sort_status('hrt_ganre_focus'),
+        "sort_by" : get_sort_status('sort_by'),
+        "sort_type" : get_sort_status('sort_type'),
         //Search Status
         "search" :$('#hr_search_term').val()
     }
-
+console.log(ajax_data);
     $.ajax({     
         type: "POST",
         crossDomain: true,
@@ -569,13 +562,24 @@ function hr_listen_sort(){
  * 
  * Get Sort status
  */
-function get_sort_status(th){
-    if ( $('.'+th+' .hr_sort').hasClass('hr_sort_desc') ){
-        return 'desc';
-    }else if ( $('.'+th).hasClass('hr_sort_asc') ){
-        return 'asc'
+function get_sort_status(req){
+
+    let sort_by = "no_sort";
+    let sort_type = "no_sort";
+
+    if( $('.hr_sort.hr_sort_desc').length>0 ){
+        sort_by = $('.hr_sort.hr_sort_desc').eq(0).parent().attr('class');
+        sort_type = "DESC";
+
+    }else if( $('.hr_sort.hr_sort_asc').length>0 ){
+        sort_by = $('.hr_sort.hr_sort_asc').eq(0).parent().attr('class');
+        sort_type = "ASC";
+    }
+
+    if (req == "sort_by"){
+        return sort_by;
     }else{
-        return false
+        return sort_type;
     }
 }
 
