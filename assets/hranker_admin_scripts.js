@@ -542,9 +542,6 @@ function add_data_to_table(data){
         hr_delete_selected_rows();
         hr_edit_selected_row();
     });
-
-    $('')
-
 }
 
 /**
@@ -553,15 +550,18 @@ function add_data_to_table(data){
  *  Listen for sort
  */
 function hr_listen_sort(){
-    $('.fa-sort-up').click(function(){
-        $(this.parentElement).removeClass('hr_sort_desc');
-        $(this.parentElement).addClass('hr_sort_asc');
+    $('.hr_sort').click(function(){
+        if ($(this).hasClass('hr_sort_desc')){
+            $('.hr_sort').removeClass('hr_sort_desc');
+            $('.hr_sort').removeClass('hr_sort_asc');
+            $(this).addClass('hr_sort_asc');
+        }else{
+            $('.hr_sort').removeClass('hr_sort_desc');
+            $('.hr_sort').removeClass('hr_sort_asc');
+            $(this).addClass('hr_sort_desc');
+        }
+        get_table_results();
     });
-
-    $('.fa-sort-down').click(function(){
-        $(this.parentElement).removeClass('hr_sort_asc');
-        $(this.parentElement).addClass('hr_sort_desc');
-    });    
 }
 
 

@@ -28,23 +28,30 @@ if (! defined( 'ABSPATH') ){
     </div>    
     <hr />
     <div class="row">
-    <div class="col-sm-3">
+    <div class="col-md-2">
             <select id="admin_product_select">
                 <option value="headphones" selected>Headphones</option>
                 <option value="iem" >IEM</option>
                 <option value="earbuds" >Earbuds</option>
             </select>
         </div>
-        <div class="col-sm-5">
+        <div class="col-md-4">
             <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
-            <input type="file" id="csv_file" style="display:none"/>
-            <!--
-            <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
-            -->
             <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
             <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
         </div>
-        <div class="col-sm-4">
+        <div class="col-md-3">
+            <div class="input-group" id="csv_upload_section">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="csv_file">
+                    <label class="custom-file-label" for="inputGroupFile04">select csv</label>
+                </div>
+                <div class="input-group-append">
+                    <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="input-group">
                 <input type="text" id="hr_search_term" class="form-control hr_locked" placeholder="Search by headphone, principle or genre">
                 <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
