@@ -5,7 +5,7 @@
 
  /* 
  Plugin Name: Headphone Ranker
- Plugin URI: http://chandimacodes.online
+ Plugin URI: https://github.com/axawebs/headphoneranker
  Description: Custom created plugin for Headphone Ranking on Wordpress
  Version: 1.0
  Author: Chandima Jayasiri
@@ -48,12 +48,12 @@ class headphoneRanker
     // protected - can only be accessed from constructor
 
     function __construct(){
-        add_action ('init', array($this, 'custom_post_type')); // tell wp to execute method on init
+        //add_action ('init', array($this, 'custom_post_type')); // tell wp to execute method on init
         $this->plugin_name = plugin_basename( __FILE__ );
     }
 
     function register(){
-        add_action( 'admin_enqueue_scripts', array($this, 'enqueue') );
+        add_action( 'admin_enqueue_scripts', array($this, 'enqueue_admin') );
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue') );
 
         add_action ( 'admin_menu', array( $this, 'add_admin_pages' ));
@@ -115,7 +115,7 @@ class headphoneRanker
             rank VARCHAR(50),
             device VARCHAR(50),
             price VARCHAR(20),
-            value INT(2),
+            value INT(2), 
             principle VARCHAR(100),
             overall_timbre VARCHAR(300),
             summery TEXT,
@@ -127,12 +127,34 @@ class headphoneRanker
         }
     }
     
+    //Enqueue on admin pages
+    function enqueue_admin(){
+        //Bootstrap
+        wp_enqueue_style( 'bootstrap4_styles', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.css',__FILE__));
+        wp_enqueue_script( 'bootstrap4_scripts', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.js',__FILE__), array('jquery'));
+        //Font-Awesome
+        wp_enqueue_style( 'fontawesome_css', plugins_url('/assets/font_awesome/css/font-awesome.css',__FILE__));
+        //Admin scripts and styles
+        wp_enqueue_style( 'headphoneranker_admin_styles', plugins_url('/assets/hranker_admin_style.css',__FILE__));
+        wp_enqueue_script( 'headphoneranker_admin_script', plugins_url('/assets/hranker_admin_scripts.js',__FILE__), array('jquery'));
+        //Select2
+        wp_enqueue_style( 'headphoneranker_select2_styles', plugins_url('/assets/select2/select2.css',__FILE__));
+        wp_enqueue_script( 'headphoneranker_select2_scripts', plugins_url('/assets/select2/select2.full.js',__FILE__), array('jquery'));
+    }
+
+    //Enqueue on all other pages
     function enqueue(){
-        //wp_enqueue_style( 'bootstrap4_styles', "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css");
-        //wp_enqueue_script( 'bootstrap4_scripts', "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", array('jquery'));
-        
-        wp_enqueue_style( 'headphoneranker_styles', plugins_url('/assets/style.css',__FILE__));
-        wp_enqueue_script( 'headphoneranker_script', plugins_url('/assets/scripts.js',__FILE__), array('jquery'));
+         //Bootstrap
+         wp_enqueue_style( 'bootstrap4_styles', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.css',__FILE__));
+         wp_enqueue_script( 'bootstrap4_scripts', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.js',__FILE__), array('jquery'));
+         //Font-Awesome
+         wp_enqueue_style( 'fontawesome_css', plugins_url('/assets/font_awesome/css/font-awesome.css',__FILE__));
+         //Admin scripts and styles
+         wp_enqueue_style( 'headphoneranker_admin_styles', plugins_url('/assets/hranker_admin_style.css',__FILE__));
+         wp_enqueue_script( 'headphoneranker_admin_script', plugins_url('/assets/hranker_admin_scripts.js',__FILE__), array('jquery'));
+         //Select2
+         wp_enqueue_style( 'headphoneranker_select2_styles', plugins_url('/assets/select2/select2.css',__FILE__));
+         wp_enqueue_script( 'headphoneranker_select2_scripts', plugins_url('/assets/select2/select2.full.js',__FILE__), array('jquery'));
     }
     
 }

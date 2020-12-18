@@ -1,0 +1,109 @@
+
+#admin-title{
+    
+}
+#admin-container .btn,#admin-container input, #hranker_table .btn{
+    font-size:10pt;
+}
+#hranker_table th,#hranker_table td{
+    font-size:11pt;
+}
+
+
+/*
+    Table CSS
+*/
+#hranker_table thead th{
+    position: relative;
+    text-align: center;
+    padding-right: 10px;
+}
+.hr_sort{
+    position: relative;
+    display: inline;
+    right:-5px;
+    width: 10px;
+    height:20px;
+}
+
+.hr_sort .fa{
+    position: absolute;
+    bottom:0px;
+    font-size: 16pt;
+    transition: all .2s;
+    cursor: pointer;
+    padding: 5px 2px;
+    line-height: 8px;
+    color:#ccc;
+}
+.hr_sort .fa:hover{
+    color:teal;
+}
+
+.hr_sort .fa-sort-down{
+    bottom:-5px;
+    padding-top:2px;
+    padding-bottom:3px;
+}
+.hr_sort .fa-sort-up{
+    top:-5px;
+    bottom:auto;
+}
+
+
+.hr_sort.hr_sort_desc .fa-sort-down,
+.hr_sort.hr_sort_asc .fa-sort-up
+{
+    color:#444;
+}
+
+
+#hranker_table thead tr{
+    height:45px;
+    background-color: #eee;
+    border-bottom: solid 2px #ccc;
+}
+#hrt_add_new_row{
+    display: table-row;
+    background-color: #fee;
+    height: 70px;
+}
+
+
+/*
+ Status Messages 
+ */
+.hranker_loader{
+    width: 120px;
+    position: absolute;
+    top:-30px;
+    right:0px
+}
+
+.signnow_success,.signnow_error{
+    position: relative;
+    display: none;
+    font-size: 10pt;
+    padding: 5px;
+    margin: 5px;
+    border: solid 1px #000;
+    border-radius: 4px;
+}
+.signnow_success{
+    background-color: #efe;
+}
+.signnow_error{
+    background-color: #fee;
+}
+
+/* Show when */
+.signnow_status_loading .signnow_loading{
+    display: inline-block;
+}
+.signnow_status_success .signnow_success{
+    display: inline-block;
+}
+
+.signnow_status_error .signnow_error{
+    display: block;
+}

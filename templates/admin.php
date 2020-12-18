@@ -3,84 +3,72 @@ if (! defined( 'ABSPATH') ){
     die;
 }
 
-//setting script variables
-if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
-$site_host = "https://";   
-else  
-$site_host = "http://";   
-// Append the host(domain name, ip) to the URL.   
-$site_host.= $_SERVER['HTTP_HOST']; 
-
-
-// Get SN Api Settings
-include plugin_dir_path(__FILE__)."../ajax_php/get_sn_settings.php"; 
-$sn_settings = get_settings_table_results();
+    //setting script variables
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+    $site_host = "https://";   
+    else  
+    $site_host = "http://";   
+    // Append the host(domain name, ip) to the URL.   
+    $site_host.= $_SERVER['HTTP_HOST'];
 
 ?>
-<h2 style="padding:20px;" id="admin-title">SignNow Settings <br>
-<span>-SignNow plugin byChandimaJ</span></h2>
 
-<div class="container" id="admin-container">
+
+<div class="container" id="admin-container" style="margin-top:20px !important">
     <div class="row">
-        <div class="col-sm-8" id="sn-api-settings" sn_data_url='<?= "$site_host/wp-content/plugins/SignNow_byChandimaj/ajax_php/" ?>'>
-            <h4>SignNow Account Settings</h4>
-            <div class="signnow_error">Error! All fields must be filled.</div>
-            <div>Api Host:</div>
-            <div class="input-group">
-                <input type="text" id="sn_data_host" value="<?= $sn_settings->sn_host?>" class="form-control" placeholder="SignNow Api Host">
-            </div>
-            <div>Api Username:</div>
-            <div class="input-group">
-                <input type="text" id="sn_data_username" value="<?= $sn_settings->sn_username?>" class="form-control" placeholder="SignNow App Account Email">
-            </div>
-            <div>Api Password:</div>
-            <div class="input-group">
-                <input type="text" id="sn_data_password" value="<?= $sn_settings->sn_password?>"   class="form-control" placeholder="SignNow App Account Password">
-            </div>
-            <div>Api Basic:</div>
-            <div class="input-group">
-                <input type="text" id="sn_data_basic" value="<?= $sn_settings->sn_basic?>"  class="form-control" placeholder="SignNow Basic Authorization Token">
-            </div>
- 
-            <div class="input-group">
-                <input type="text" id="sn_data_bearer" class="form-control" placeholder="Test if Settings are valid" disabled>
-                <button type="button" id="sn_test_settings" class="btn btn-default">Test Settings</button>
-            </div>
-
-            <div class="button-group">
-                
-            </div>
-            <div id="sn_save_settings">
-                <button type="button" class="btn btn-default sn_save">Save Settings</button>
-                <img class="signnow_loading" src="/wp-content/plugins/SignNow_byChandimaj/assets/loading.gif" />
-                <div class="signnow_success">Settings Saved !</div>
-                <div class="signnow_error">Error! Settings not saved.</div>
-            </div>
+        <div class="col-sm-12">
+            <h5 id="admin-title">HRanker Product Manager</h5>
+            <img class="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
+        </div>
+    </div>    
+    <hr />
+    <div class="row">
+    <div class="col-sm-3">
+            <select id="admin_product_select">
+                <option value="headphones" selected>Headphones</option>
+                <option value="iem" >IEM</option>
+                <option value="earbuds" >Earbuds</option>
+            </select>
+        </div>
+        <div class="col-sm-5">
+            <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
+            <input type="file" id="csv_file" style="display:none"/>
+            <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
+            <button id="hr_edit_selected" type="button" class="btn btn-secondary"><i class="fa fa-edit"></i> Edit</button>
+            <button id="hr_delete_selected" type="button" class="btn btn-secondary"><i class="fa fa-trash"></i> Delete</button>
         </div>
         <div class="col-sm-4">
-            
+            <div class="input-group">
+                <input type="text" id="hr_search_term" class="form-control" placeholder="Search by headphone, principle or genre">
+                <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
+            </div>
         </div>
     </div>
- 
-    <div class="row" style="margin-top:50px;">
-        <div class="col-sm-6">
-            <h4>Implementation</h4>
-            <p>The plugin use custom post types and shortcodes to implement
-                Send Now actions: <br>
-            <hr>
-            <h6>Create & Send Document to Sign:</h6>
-            <div class="col-sm-6">
-                <span class='titlex'>SignNow Post Type</span> <br>
-                <span class='copytext'>SignNow Send Document</span>
-            </div>
-            <div class="col-sm-6">
-                <span class='titlex'>Shortcode</span> <br>
-                <span class='copytext'>[sn-send-doc]</span>    
-            </div>
-            </p>
-        </div>
-    </div>
+    <hr />
 </div>
 
+
+<div class="container">
+    <div class="row" id="data_table_container">
+        <table id="hranker_table" hr_showing="headphones" class="col-sm-12">
+            <thead>
+                <tr>
+                    <th class="hrt_select" width="2%"><input id="hrt_select_all" type="checkbox"></th>
+                    <th class="hrt_rank" width="6%">Rank<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank">Headphone<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank" width="7%">Price<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank" width="6%">Value<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank">Principle<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank">Overall Timbre<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank">Summery<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_rank">Ganre Focus<div class="hr_sort hr_sort_desc"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                </tr>
+            <thead>
+            <tbody>
+                
+            </tbody>
+        </table> 
+    </div>
+</div>
 
 
