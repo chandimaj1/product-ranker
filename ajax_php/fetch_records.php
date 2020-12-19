@@ -1,4 +1,6 @@
 <?php
+//error_reporting(0);
+
 require_once('../../../../wp-load.php');
 if (!isset($wpdb)){
     $msg = 'Error loading wpdb';

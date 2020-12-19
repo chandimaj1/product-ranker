@@ -58,7 +58,7 @@ class headphoneRanker
 
         add_action ( 'admin_menu', array( $this, 'add_admin_pages' ));
         add_filter ("plugin_action_links_$this->plugin_name", array ($this, 'settings_link'));
-        add_filter( 'single_template', array($this, 'load_custom_post_specific_template'));
+       // add_filter( 'single_template', array($this, 'load_custom_post_specific_template'));
     }
 
 
@@ -124,6 +124,43 @@ class headphoneRanker
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             dbDelta($sql);
             add_option("headphoneranker_db_version", "1.0");
+        }
+
+        // IEM
+        $table_name = $wpdb->prefix."hranker_iem";
+        if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
+            $sql = 'CREATE TABLE '.$table_name.'(
+            id INTEGER NOT NULL AUTO_INCREMENT,
+            rank VARCHAR(50),
+            device VARCHAR(50),
+            price VARCHAR(20),
+            value INT(2), 
+            overall_timbre VARCHAR(300),
+            summary TEXT,
+            ganre_focus VARCHAR(300),
+            PRIMARY KEY  (id))';
+            require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+            add_option("headphoneranker_db_version", "1.1");
+        }
+
+        // Earbuds
+        $table_name = $wpdb->prefix."hranker_earbuds";
+        if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
+            $sql = 'CREATE TABLE '.$table_name.'(
+            id INTEGER NOT NULL AUTO_INCREMENT,
+            rank VARCHAR(50),
+            device VARCHAR(50),
+            price VARCHAR(20),
+            value INT(2), 
+            principle VARCHAR(100),
+            overall_timbre VARCHAR(300),
+            summary TEXT,
+            ganre_focus VARCHAR(300),
+            PRIMARY KEY  (id))';
+            require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+            add_option("headphoneranker_db_version", "1.2");
         }
     }
     

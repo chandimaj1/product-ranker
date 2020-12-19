@@ -15,7 +15,7 @@ var ajax_url = '/wp-content/plugins/headphone_ranker/ajax_php/';
 function hr_new_entry(){
     $('#hr_new_entry').click(function(){
 
-        const hrt_addnewrow_template = `
+        let hrt_addnewrow_template = `
             <tr id="hrt_add_new_row">
                 <td></td>
                 <td><input id="hrt_anr_rank" class="form-control" type="text"></td>
@@ -34,6 +34,15 @@ function hr_new_entry(){
                 </td>
             </tr>
         `;
+
+        //Formatting template for each device type
+        const device_type = $('#admin_product_select').val();
+        
+        if(device_type=="headphones"){
+            //Do nothinge
+        }else if(device_type=="iem"){
+            hrt_addnewrow_template = hrt_addnewrow_template.replace('<td><input id="hrt_anr_principle" class="form-control" type="text"></td>','');
+        }
 
         //Remove Edit row
         if ($('#hrt_edit_row').length>0){
@@ -79,16 +88,35 @@ function save_new_row(){
     $('#hranker_table tbody').addClass('hr_locked');
     hr_status('secondary','Saving new row in database...');
 
-    let ajax_data = {
-        "table":$('#admin_product_select').val(),
-        "rank" :$('#hrt_anr_rank').val(),
-        "device" :$('#hrt_anr_device').val(),
-        "price" :$('#hrt_anr_price').val(),
-        "value" :$('#hrt_anr_value').val(),
-        "principle" :$('#hrt_anr_principle').val(),
-        "overall_timbre" :$('#hrt_anr_overall_timbre').val(),
-        "summary" :$('#hrt_anr_summary').val(),
-        "ganre_focus" :$('#hrt_anr_ganre_focus').val()
+    let ajax_data = {};
+    //DEVICE SPECIFIC VALUES PASSED
+    const device_type = $('#admin_product_select').val();
+    
+    //Headphones
+    if(device_type=="headphones"){
+        ajax_data = {
+            "table":$('#admin_product_select').val(),
+            "rank" :$('#hrt_anr_rank').val(),
+            "device" :$('#hrt_anr_device').val(),
+            "price" :$('#hrt_anr_price').val(),
+            "value" :$('#hrt_anr_value').val(),
+            "principle" :$('#hrt_anr_principle').val(),
+            "overall_timbre" :$('#hrt_anr_overall_timbre').val(),
+            "summary" :$('#hrt_anr_summary').val(),
+            "ganre_focus" :$('#hrt_anr_ganre_focus').val()
+        }
+    //iem
+    }else if(device_type=="iem"){
+        ajax_data = {
+            "table":$('#admin_product_select').val(),
+            "rank" :$('#hrt_anr_rank').val(),
+            "device" :$('#hrt_anr_device').val(),
+            "price" :$('#hrt_anr_price').val(),
+            "value" :$('#hrt_anr_value').val(),
+            "overall_timbre" :$('#hrt_anr_overall_timbre').val(),
+            "summary" :$('#hrt_anr_summary').val(),
+            "ganre_focus" :$('#hrt_anr_ganre_focus').val()
+        }
     }
 
     //Validation
@@ -149,6 +177,120 @@ function save_new_row(){
 /**
  * 
  * 
+ * 
+ * 
+ * Upload CSV
+ * 
+ */
+function hr_upload_csv(){
+    $('#hr_upload_csv').click(function(){
+        const file = $('#csv_file')[0].files[0];
+        hr_status('secondary','uploading csv...');
+        if ($('#csv_file')[0].files.length==0){
+            hr_status('danger','No file selected...');
+        }else if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), ['csv']) == -1) {
+            hr_status('danger','Only CSV Files are allowed...');
+        }else{
+
+            /**
+             * 
+             * File Upload Script
+             */
+            let Upload = function (file) {
+                this.file = file;
+            };
+
+            Upload.prototype.getType = function() {
+                return this.file.type;
+            };
+            Upload.prototype.getSize = function() {
+                return this.file.size;
+            };
+            Upload.prototype.getName = function() {
+                return this.file.name;
+            };
+
+            Upload.prototype.doUpload = function (file) {
+
+                var that = this;
+                var formData = new FormData();
+
+                // add assoc key values, this will be posts values
+                formData.append("file", this.file, this.getName());
+                formData.append("upload_file", true);
+                formData.append( "table", $('#admin_product_select').val() );
+                console.log("uploading files..");
+
+                $.ajax({
+                    
+                    type: "POST",
+                    url:ajax_url + 'file_upload.php',
+                    xhr: function () {
+                        var myXhr = $.ajaxSettings.xhr();
+                        if (myXhr.upload) {
+                            myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                        }
+                        return myXhr;
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        console.log(data);
+                        console.log("file uploaded...");
+
+                        if(data.upload=="success"){
+                            hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
+                            refresh_table();
+                        }
+                    },
+                    error: function (error) {
+                        // handle error
+                        console.log("file upload failed...");
+                        console.log(error)
+                    },
+                    async: true,
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    timeout: 60000
+                });
+            };
+
+            Upload.prototype.progressHandling = function (event) {
+                var percent = 0;
+                var position = event.loaded || event.position;
+                var total = event.total;
+                if (event.lengthComputable) {
+                    percent = Math.ceil(position / total * 100);
+                }
+                // update progressbars classes so it fits your code
+                $("#hr_message:before").css("content", percent + "% ");
+            };
+
+            //Initiate file upload
+            var upload = new Upload(file);
+            upload.doUpload(file);
+        }
+    });
+
+
+    $("#hr_upload_csv").change(function () {
+        console.log('file selected');
+        var fileExtension = ['csv'];
+        if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            hr_status('danger','Only CSV Files are allowed...')
+        }
+    });
+}
+
+
+
+
+
+
+/**
+ * 
+ * 
  * UI notifications
  */
 
@@ -187,8 +329,31 @@ function save_new_row(){
  */
 function hr_category_change(){
     $('#admin_product_select').change(function(){
-        get_table_results();
+        const hr_showing =$(this).val();
+        $('#hranker_table').attr('hr_showing',hr_showing);
+
+        if(hr_showing=="headphones"){
+            $('#hr_device_name').text('Headphone');
+        }else if(hr_showing=="iem"){
+            $('#hr_device_name').text('IEM');
+        }else if(hr_showing=="earbuds"){
+            $('#hr_device_name').text('Earbud');
+        }
+
+        refresh_table();
     });
+}
+/***
+ * 
+ * Reload table without sort
+ */
+function refresh_table(){    
+    $('.hr_sort_desc').removeClass('hr_sort_desc');
+        $('.hr_sort_asc').removeClass('hr_sort_asc');
+
+        $('#hranker_table tbody').html('');
+
+        get_table_results();
 }
 
 
@@ -334,6 +499,15 @@ function hr_edit_selected_row(){
             </td>
         </tr>`;
 
+        //Formatting template for each device type
+        const device_type = $('#admin_product_select').val();
+        
+        if(device_type=="headphones"){
+            //Do nothinge
+        }else if(device_type=="iem"){
+            edit_selected_row_template = edit_selected_row_template.replace('<td><input id="hrt_er_principle" class="form-control" type="text" value="'+selected_row.children('.hrt_principle').text()+'"></td>','');
+        }
+
         //Remove add new element row
         if ($('#hrt_add_new_row').length>0){
             $('#hrt_add_new_row').remove();
@@ -370,18 +544,39 @@ function save_edited_row(){
     $('#hranker_table tbody').addClass('hr_locked');
     hr_status('secondary','Saving edited row in database...');
 
-    let ajax_data = {
-        "table":$('#admin_product_select').val(),
-        "id":$('#hrt_edit_row').attr('edit_row_id'),
-        "rank" :$('#hrt_er_rank').val(),
-        "device" :$('#hrt_er_device').val(),
-        "price" :$('#hrt_er_price').val(),
-        "value" :$('#hrt_er_value').val(),
-        "principle" :$('#hrt_er_principle').val(),
-        "overall_timbre" :$('#hrt_er_overall_timbre').val(),
-        "summary" :$('#hrt_er_summary').val(),
-        "ganre_focus" :$('#hrt_er_ganre_focus').val()
+    let ajax_data = {};
+    //DEVICE SPECIFIC VALUES PASSED
+    const device_type = $('#admin_product_select').val();
+    
+    //Headphones
+    if(device_type=="headphones"){
+        ajax_data = {
+            "table":$('#admin_product_select').val(),
+            "id":$('#hrt_edit_row').attr('edit_row_id'),
+            "rank" :$('#hrt_er_rank').val(),
+            "device" :$('#hrt_er_device').val(),
+            "price" :$('#hrt_er_price').val(),
+            "principle" :$('#hrt_er_principle').val(),
+            "value" :$('#hrt_er_value').val(),
+            "overall_timbre" :$('#hrt_er_overall_timbre').val(),
+            "summary" :$('#hrt_er_summary').val(),
+            "ganre_focus" :$('#hrt_er_ganre_focus').val()
+        }
+    //iem
+    }else if(device_type=="iem"){
+        ajax_data = {
+            "table":$('#admin_product_select').val(),
+            "id":$('#hrt_edit_row').attr('edit_row_id'),
+            "rank" :$('#hrt_er_rank').val(),
+            "device" :$('#hrt_er_device').val(),
+            "price" :$('#hrt_er_price').val(),
+            "value" :$('#hrt_er_value').val(),
+            "overall_timbre" :$('#hrt_er_overall_timbre').val(),
+            "summary" :$('#hrt_er_summary').val(),
+            "ganre_focus" :$('#hrt_er_ganre_focus').val()
+        }
     }
+    
 
     //Validation
     let all_filled = true;
@@ -527,6 +722,15 @@ function add_data_to_table(data){
             <td class="hrt_ganre_focus">`+item.ganre_focus+`</td>
         </tr>`;
 
+        //Formatting template for each device type
+        const device_type = $('#admin_product_select').val();
+        
+        if(device_type=="headphones"){
+            //Do nothinge
+        }else if(device_type=="iem"){
+            row = row.replace('<td class="hrt_principle">'+item.principle+'</td>','');
+        }
+        
         $('#hranker_table tbody').append(row);
         $('#hranker_table').removeClass('hr_locked');
 
@@ -604,16 +808,20 @@ function get_sort_status(req){
 $(document).ready(function() {
     console.log('HRanker Product Manager - Scripts Ready()');
 
-    //Event Listeners
-    hr_new_entry(); // new entry click
-    hr_category_change();// category select change
-    hr_listen_sort(); // Sorting
-
-
-
-
-    //Onload fetch results
-    get_table_results();
+ // --- Execute Admin page specific functions   
+ if($('#isadminpage').val()=="true"){
+     //Event Listeners
+     hr_new_entry(); // new entry click
+     hr_category_change();// category select change
+     hr_listen_sort(); // Sorting
+     hr_upload_csv(); // CSV upload
+ 
+ 
+ 
+     //Onload fetch results
+     get_table_results();
+ }
+   
 })
 
 //--- jQuery No Conflict

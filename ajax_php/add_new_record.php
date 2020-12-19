@@ -12,28 +12,56 @@ function save_settings_table(){
     global $wpdb;
     $msg = 'Error! Unknown';
 
-    if( isset($_POST['device']) && isset($_POST['price']) && isset($_POST['principle']) && isset($_POST['rank'])){
-        $table_name = $wpdb->prefix."hranker_headphones";
-        $data = array(
-            'rank' => $_POST['rank'], 
-            'device' => $_POST['device'],
-            'price' => $_POST['price'],
-            'value'=> $_POST['value'],
-            'principle'=> $_POST['principle'],
-            'overall_timbre'=> $_POST['overall_timbre'],
-            'summary'=> $_POST['summary'],
-            'ganre_focus'=> $_POST['ganre_focus'],
-        );
-        $data_definitions = array (
-            '%s',
-            '%s',
-            '%f',
-            '%d',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-        );
+    if( isset($_POST['table']) && isset($_POST['device']) && isset($_POST['price']) && isset($_POST['rank'])){
+        $table_name = $wpdb->prefix."hranker_".$_POST["table"];
+
+        //Headphones
+        if ($_POST["table"]=="headphones"){
+            $data = array(
+                'rank' => $_POST['rank'], 
+                'device' => $_POST['device'],
+                'price' => $_POST['price'],
+                'value'=> $_POST['value'],
+                'principle'=> $_POST['principle'],
+                'overall_timbre'=> $_POST['overall_timbre'],
+                'summary'=> $_POST['summary'],
+                'ganre_focus'=> $_POST['ganre_focus'],
+            );
+            $data_definitions = array (
+                '%s',
+                '%s',
+                '%f',
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+            );
+
+        //IEM
+        }else if($_POST["table"]=="iem"){
+            $data = array(
+                'rank' => $_POST['rank'], 
+                'device' => $_POST['device'],
+                'price' => $_POST['price'],
+                'value'=> $_POST['value'],
+                //'principle'=> $_POST['principle'],
+                'overall_timbre'=> $_POST['overall_timbre'],
+                'summary'=> $_POST['summary'],
+                'ganre_focus'=> $_POST['ganre_focus'],
+            );
+            $data_definitions = array (
+                '%s',
+                '%s',
+                '%f',
+                '%d',
+                //'%s',
+                '%s',
+                '%s',
+                '%s',
+            );
+        }
+        
         $msg = $wpdb->replace($table_name, $data, $data_definitions);
         if($msg){ 
             $msg= "success";

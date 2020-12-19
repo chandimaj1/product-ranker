@@ -15,7 +15,8 @@ if (! defined( 'ABSPATH') ){
 ?>
 
 <div id="hr_settings" style="display:none">
-    <input id="hr_pluginurl" value="<?= $$plugin_url ?>" disabled/>
+    <input id="hr_pluginurl" value="<?= $plugin_url ?>" disabled/>
+    <input id="isadminpage" value="true" disabled/>
 </div>
 
 <div class="container" id="admin-container" style="margin-top:20px !important">
@@ -24,7 +25,7 @@ if (! defined( 'ABSPATH') ){
             <h5 id="admin-title">HRanker Product Manager</h5>
             <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
             <div id="hr_message" class="text-right">Retrieving ...</div>
-        </div>
+        </div> 
     </div>    
     <hr />
     <div class="row">
@@ -69,7 +70,7 @@ if (! defined( 'ABSPATH') ){
                 <tr>
                     <th class="hrt_select" width="2%"><input id="hrt_select_all" type="checkbox"></th>
                     <th class="hrt_rank" width="6%">Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_device" width="13%">Headphone<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_device" width="13%"><span id="hr_device_name">Headphone</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_price" width="8%">Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_value" width="6%">Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_principle">Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>

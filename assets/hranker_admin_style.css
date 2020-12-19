@@ -1,3 +1,13 @@
+/**
+
+    PRODUCT SPECIFIC TABLE MODIFIERS
+*/
+[hr_showing="iem"] .hrt_principle{
+    display: none;
+}
+
+
+
 
 #admin-title{
     
