@@ -19,7 +19,6 @@ function fetch_paginated_result_ids(){
     if( isset($_POST['table']) ){
         $table_name = $wpdb->prefix."hranker_".$_POST['table'];
 
-        $where = '';
         $sort = 'ORDER BY id DESC';
 
         if ( isset($_POST["sort_by"])  &&  isset($_POST["sort_type"]) && $_POST["sort_by"]!="no_sort" &&  $_POST["sort_type"]!="no_sort" ){
@@ -27,9 +26,21 @@ function fetch_paginated_result_ids(){
             $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
         }
 
-        $result = $wpdb->get_results( 
-                    "SELECT DISTINCT id FROM $table_name $where $sort"
-                );
+        $sql = "SELECT DISTINCT id FROM $table_name $sort";
+
+
+        if( isset($_POST['search']) && $_POST['search']!="" ){
+            $search_text = sanitize_text_field( $_POST['search'] );
+
+            if($_POST['table']=="headphones"){
+                $sql = "SELECT DISTINCT id FROM $table_name WHERE (device like '%$search_text%') OR (principle like '%$search_text%')";
+            }
+
+            //$_POST["pagination"]=1; 
+        }
+
+        $result = $wpdb->get_results( $sql );
+        
 
         if($result){ 
             $msg= "success";
@@ -51,16 +62,29 @@ $return = fetch_paginated_result_ids();
 
 
 
+//Check if Pagination requested
 
-function fetch_results_from_ids($page1_ids,$table,$sort){
+if ( isset($_POST['pagination']) &&  (int)$_POST['pagination']>1 ){
+    $request_page = (int)$_POST['pagination'];
+}else{
+    $request_page = 1;
+}
+//paged_Ids_array Index for requested page 
+$page = $request_page - 1;
+$total_pages = count($return["paginated_result"]);
+
+
+
+//Fetch record info for the requested page
+function fetch_results_from_ids($page_ids,$table,$sort){
     global $wpdb;
     $msg = 'Error! Unknown';
 
-    if( isset($page1_ids) &&  isset($table)){
+    if( isset($page_ids) &&  isset($table)){
         $table_name = $wpdb->prefix."hranker_".$table;
         $where = 'WHERE (';
 
-        foreach ($page1_ids as $id){
+        foreach ($page_ids as $id){
             $where .= 'id='.$id->id.' || ';
         }
 
@@ -79,12 +103,71 @@ function fetch_results_from_ids($page1_ids,$table,$sort){
         $msg = 'Missing data sent to server !';
     }
 
-    $return = array("msg"=>$msg, "page1_data"=>$result);
+    $return = array("msg"=>$msg, "page_data"=>$result);
     return ($return);
 }
-$return_page1 = fetch_results_from_ids($return["paginated_result"][0], $_POST["table"], $return["sort"]);
+$return_page = fetch_results_from_ids($return["paginated_result"][$page], $_POST["table"], $return["sort"]);
 
-$msg = [$return, $return_page1];
+
+
+
+
+
+
+function create_paginationHTML($total_pages, $request_page){
+
+    //Filling middle pages
+    $paginationHtml_pages = '';
+        for($i=1; $i<($total_pages+1); $i++){
+            //Check if page or current page
+            $class="page";
+            if ($i==$request_page){$class="current";}
+            $paginationHtml_pages .= "<span class='$class' >$i</span>";
+        }
+
+    $paginationHtml_previous = '<span class="page pagination_prev"><i class="fa fa-angle-left"></i></span>';
+    $paginationHtml_next = '<span class="page pagination_next"><i class="fa fa-angle-right"></i></span>';
+    
+    if ($request_page == 1 && $total_pages==1){        // Only one page for results
+        //HTML Components
+        $paginationHtml_previous = '';
+        $paginationHtml_pages = '<span class="current">1</span>';
+        $paginationHtml_next = '';
+
+    } else if ($request_page == 1){        // First Page requested
+        //HTML Components
+        $paginationHtml_previous = '';
+
+    }else if(  $request_page < $total_pages  ){         // A Middle Page requested
+        //HTML Components
+        
+    }else if(  $request_page == $total_pages  ){  // Last page requested
+        //HTML Components
+        $paginationHtml_next = '';
+    }
+
+    $paginationHtml_info = "Page $request_page of $total_pages";
+
+    $paginationHtml = 
+        "<div class='page-nav td-pb-padding-side'>"
+            .$paginationHtml_previous
+            .$paginationHtml_pages
+            .$paginationHtml_next
+            .'<span class="pages" id="pagination_info">'.$paginationHtml_info.'</span>'
+            .'<div class="clearfix"></div>'
+        ."</div>";
+
+    return ($paginationHtml);
+}
+$paginationHtml = create_paginationHTML($total_pages, $request_page);
+
+
+
+
+
+
+
+$msg = [$return, $return_page, "paginationHtml"=>"$paginationHtml"];
 
 $msg = json_encode($msg);
 echo($msg);

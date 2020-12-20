@@ -337,12 +337,15 @@ function hr_category_change(){
 
         if(hr_showing=="headphones"){
             $('#hr_device_name').text('Headphone');
+            $('#hr_search_term').attr('data-original-title','Search by headphone, principle or genre');
+
         }else if(hr_showing=="iem"){
             $('#hr_device_name').text('IEM');
+            $('#hr_search_term').attr('data-original-title','Search by IEM or genre');
+
         }else if(hr_showing=="earbuds"){
             $('#hr_device_name').text('Earbud');
         }
-
         refresh_table();
     });
 }
@@ -356,6 +359,10 @@ function refresh_table(){
 
         $('#hranker_table tbody').html('');
         $('#hr_search_term').val('');
+
+        $('#hr_search_input_group').removeClass('hr_search_active');
+
+        $('#pagination').attr( 'current_page' , '1' );
 
         get_table_results();
 }
@@ -662,6 +669,8 @@ function get_table_results(){
     $('#hranker_table tbody').addClass('hr_locked');
     $('#hr_edit_selected').addClass('hr_locked');
     $('#hr_delete_selected').addClass('hr_locked');
+    $('#hr_search_input_group').addClass('hr_locked');
+    $('#pagination').addClass('hr_locked');
 
     hr_status('secondary','Fetching results from database..');
 
@@ -671,7 +680,9 @@ function get_table_results(){
         "sort_by" : get_sort_status('sort_by'),
         "sort_type" : get_sort_status('sort_type'),
         //Search Status
-        "search" :$('#hr_search_term').val()
+        "search" :$('#hr_search_term').val(),
+        //Pagination Info
+        "pagination" : $('#pagination').attr('current_page')
     }
 console.log(ajax_data);
     $.ajax({     
@@ -690,11 +701,12 @@ console.log(ajax_data);
 
                 $('#hranker_table thead').removeClass('hr_locked');
                 $('#hranker_table tbody').removeClass('hr_locked');
-
-                hr_status('success','Table results fetched..');
+                $('#hr_search_input_group').removeClass('hr_locked');
+                $('#hrt_select_all').prop('checked',false);
 
                 //ADD TABLE ROWS
-                add_data_to_table(data[1].page1_data);
+                add_data_to_table(data[1].page_data);
+                set_pagination(data.paginationHtml);
             }else{
                 console.log("Error... ");
                 console.log(data);
@@ -744,7 +756,56 @@ function add_data_to_table(data){
         hr_delete_selected_rows();
         hr_edit_selected_row();
     });
+
+    setTimeout(function(){
+        hr_status('success','Table results fetched..');
+    },2000);
+    
 }
+
+
+
+
+
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * Pagination
+ */
+function set_pagination(paginationHtml){
+    console.log('setting pagination...');
+    console.log(paginationHtml);
+
+    $('#pagination').html('');
+    $('#pagination').append(paginationHtml);
+
+    $('#pagination .page').unbind('click').click(function(){
+        let current_page = parseInt( $('#pagination').attr( 'current_page' ) );
+        if ( $(this).hasClass('pagination_prev') ){
+            current_page--;
+        }else if ( $(this).hasClass('pagination_next') ){
+            current_page++;
+        }else{
+            current_page = $(this).text();
+        }
+        
+        $('#pagination').attr( 'current_page' , current_page );
+
+        get_table_results();
+    });
+
+    $('#pagination').removeClass('hr_locked');
+}
+
+
+
+
+
+
+
 
 /**
  * 
@@ -765,7 +826,6 @@ function hr_listen_sort(){
         get_table_results();
     });
 }
-
 
 /**
  * 
@@ -796,6 +856,71 @@ function get_sort_status(req){
 
 
 
+
+
+
+/**
+ * 
+ * 
+ *  HR Search
+ */
+function hr_search(){
+    $('#hr_search').click(function(){
+        $('#hranker_table thead').addClass('hr_locked');
+        $('#hranker_table tbody').addClass('hr_locked');
+        $('#hr_edit_selected').addClass('hr_locked');
+        $('#hr_delete_selected').addClass('hr_locked');
+        $('#hr_search_input_group').addClass('hr_locked');
+
+        hr_status('secondary','Searching...');
+
+        const search_term = $('#hr_search_term').val();
+        let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`-="
+        let check_chars = function(string){
+            for(i = 0; i < specialChars.length;i++){
+                if(string.indexOf(specialChars[i]) > -1){
+                    return true
+                }
+            }
+            return false;
+        }
+
+        if( typeof search_term == 'undefined' || search_term == '' ){
+            $('#hr_search_input_group').removeClass('hr_search_active');
+            hr_status('danger','Empty Search...');
+
+            get_table_results();
+
+        }else if( check_chars(search_term) != false ){
+            hr_status('danger','Invalid characters found in search term');
+            $('#hr_search_input_group').addClass('hr_search_active');
+            $('#hr_search_input_group').removeClass('hr_locked');
+
+        }else{
+
+            hr_status('secondary','Searching for "'+search_term+'" ...');
+            $('#hr_search_input_group').addClass('hr_search_active');
+
+            get_table_results();
+        }
+    });
+}
+
+
+
+/**
+ * 
+ * 
+ * Cancel Search
+ */
+function cancel_search(){
+    $('#hr_search_cancel').click(function(){
+        refresh_table();
+    });
+}
+
+
+
 /**
  * 
  * 
@@ -820,8 +945,8 @@ $(document).ready(function() {
      hr_category_change();// category select change
      hr_listen_sort(); // Sorting
      hr_upload_csv(); // CSV upload
- 
- 
+     hr_search(); // Search
+     cancel_search()// Cancel Search
  
      //Onload fetch results
      get_table_results();

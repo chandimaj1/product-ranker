@@ -12,19 +12,28 @@
 #admin-container .btn,#admin-container input, #hranker_table .btn, #csv_upload_section{
     font-size:10pt;
 }
-#hranker_table th,#hranker_table td{
-    font-size:11pt;
-}
-
 
 /*
     Table CSS
 */
+#hranker_table{
+    border: solid 2px #eee;
+}
 #hranker_table thead th{
     position: relative;
     text-align: left;
-    padding-right: 10px;
+    padding-right: 30px;
     font-size:10pt;
+    border-right:solid 1px #ccc;
+    padding-left:4px;
+}
+#hranker_table thead .hrt_select{
+    padding-right:4px;
+}
+#hranker_table td{
+    font-size:10pt;
+    border-right:solid 1px #ccc;
+    padding-left:5px;
 }
 #hranker_table tbody tr:nth-child(odd){
     background-color:#eee;
@@ -37,15 +46,32 @@
 }
 #hrt_select_all{
     margin-left:7px;
-    background-color:#eee;
+    background-color:#fff;
+    border-color: #f00;
 }
 .hr_sort{
     position: relative;
     display: inline;
     right:-5px;
-    width: 10px;
+    width: 15px;
     height:10px;
+    align-items: middle;
 }
+.hr_sort:before{
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content:'\f05a';
+    margin-left:0px;
+    margin-right:6px;
+    font-size:12pt;
+    opacity: .4;
+    transition: all .4s;
+}
+    th:hover .hr_sort:before{
+        opacity: 1;
+    }
 
 .hr_sort .fa{
     position: absolute;
@@ -83,7 +109,7 @@
 
 #hranker_table thead tr{
     height:45px;
-    background-color: #eee;
+    background-color: #fff;
     border-bottom: solid 2px #ccc;
 }
 #hrt_add_new_row, #hrt_edit_row{
@@ -96,7 +122,7 @@
 }
 
 #hranker_table th{
-    cursor: help;
+    cursor: default;
 }
 
 
@@ -150,3 +176,41 @@ tr.selected_row{
     border-radius: 4px;
     transition:all .2s;
 }
+
+
+/*
+    Page navigation
+*/
+.page-nav {
+    margin: 30px 0 30px 0;
+    font-family: 'Open Sans', arial, sans-serif;
+    font-size: 12px;
+    display: inline-block;
+    width: 100%;
+}
+.page-nav span {
+    padding: 5px 11px;
+    border: 1px solid #e3e3e3;
+    display: inline-block;
+    margin: 0 8px 8px 0;
+    min-width: 33px;
+    text-align: center;
+    color: #666;
+    line-height: 21px;
+    float: left;
+    cursor: pointer;
+    transition: all .4s;
+}
+.page-nav span:hover{
+    background-color:#eee;
+}
+.page-nav .current {
+    background-color: #4db2ec;
+    color: #fff;
+    border-color: #4db2ec;
+}
+#pagination_info{
+    text-align:right;
+    border: none;
+}
+

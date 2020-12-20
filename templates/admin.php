@@ -53,8 +53,8 @@ if (! defined( 'ABSPATH') ){
             </div>
         </div>
         <div class="col-md-3">
-            <div class="input-group" id="hr_search_input_group">
-                <input type="text" id="hr_search_term" class="form-control hr_locked" placeholder="Search by headphone, principle or genre">
+            <div class="input-group hr_locked" id="hr_search_input_group">
+                <input type="text" id="hr_search_term" class="form-control" placeholder="Search Table" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
                 <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
                 <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i></button>
             </div>
@@ -68,8 +68,8 @@ if (! defined( 'ABSPATH') ){
     <div class="row" id="data_table_container">
         <table id="hranker_table" hr_showing="headphones" class="col-sm-12">
             <thead class="hr_locked">
-                <tr>
-                    <th class="hrt_select" width="2%">
+                <tr> 
+                    <th class="hrt_select" width="1%" data-toggle="tooltip" data-placement="top" title="Select All / Deselect All">
                         <input id="hrt_select_all" type="checkbox">
                     </th>
                     <th class="hrt_rank" width="6%" data-toggle="tooltip" data-placement="top" title="Ranking: A (Best) to F (Worst)">
@@ -96,6 +96,7 @@ if (! defined( 'ABSPATH') ){
             </tbody>
         </table> 
     </div>
+
+    <div class="row" id="pagination" current_page='1'>
+    </div>
 </div>
-
-

@@ -47,7 +47,10 @@ function save_csv_in_table($target_file){
                 $rank = trim($csvData[0]);
                 $device = trim($csvData[1]);
                 $price = trim($csvData[2]);
+                    $price = str_replace('$','',$price);
+                    $price = (float)$price;
                 $value = trim($csvData[3]);
+                    $value = (int)$value;
                 $principle = trim($csvData[4]);
                 $overall_timbre = trim($csvData[5]);
                 $summary = trim($csvData[6]);
@@ -60,7 +63,10 @@ function save_csv_in_table($target_file){
                 $rank = trim($csvData[0]);
                 $device = trim($csvData[1]);
                 $price = trim($csvData[2]);
+                    $price = str_replace('$','',$price);
+                    $price = (float)$price;
                 $value = trim($csvData[3]);
+                    $value = (int)$value;
                 $overall_timbre = trim($csvData[4]);
                 $summary = trim($csvData[5]);
                 $ganre_focus = trim($csvData[6]);
