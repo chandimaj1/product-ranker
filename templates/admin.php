@@ -53,9 +53,10 @@ if (! defined( 'ABSPATH') ){
             </div>
         </div>
         <div class="col-md-3">
-            <div class="input-group">
+            <div class="input-group" id="hr_search_input_group">
                 <input type="text" id="hr_search_term" class="form-control hr_locked" placeholder="Search by headphone, principle or genre">
                 <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
+                <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i></button>
             </div>
         </div>
     </div>
@@ -68,15 +69,26 @@ if (! defined( 'ABSPATH') ){
         <table id="hranker_table" hr_showing="headphones" class="col-sm-12">
             <thead class="hr_locked">
                 <tr>
-                    <th class="hrt_select" width="2%"><input id="hrt_select_all" type="checkbox"></th>
-                    <th class="hrt_rank" width="6%">Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_device" width="13%"><span id="hr_device_name">Headphone</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_price" width="8%">Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_value" width="6%">Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_principle">Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_overall_timbre">Overall Timbre<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_summary">Summary<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_ganre_focus">Ganre Focus<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_select" width="2%">
+                        <input id="hrt_select_all" type="checkbox">
+                    </th>
+                    <th class="hrt_rank" width="6%" data-toggle="tooltip" data-placement="top" title="Ranking: A (Best) to F (Worst)">
+                        Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div>
+                    </th>
+                    <th class="hrt_device" width="13%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <span id="hr_device_name">Headphone</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_price" width="8%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_overall_timbre" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Overall Timbre<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_summary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Summary<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_ganre_focus" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        Ganre Focus<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                 </tr>
             <thead>
             <tbody class="hr_locked">

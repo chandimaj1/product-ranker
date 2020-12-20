@@ -239,7 +239,10 @@ function hr_upload_csv(){
 
                         if(data.upload=="success"){
                             hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
-                            refresh_table();
+
+                            setTimeout(function(){
+                                refresh_table();
+                            },5000);
                         }
                     },
                     error: function (error) {
@@ -352,6 +355,7 @@ function refresh_table(){
         $('.hr_sort_asc').removeClass('hr_sort_asc');
 
         $('#hranker_table tbody').html('');
+        $('#hr_search_term').val('');
 
         get_table_results();
 }
@@ -686,6 +690,7 @@ console.log(ajax_data);
 
                 $('#hranker_table thead').removeClass('hr_locked');
                 $('#hranker_table tbody').removeClass('hr_locked');
+
                 hr_status('success','Table results fetched..');
 
                 //ADD TABLE ROWS
@@ -820,6 +825,9 @@ $(document).ready(function() {
  
      //Onload fetch results
      get_table_results();
+
+     //Enable Tooltips
+     $('[data-toggle="tooltip"]').tooltip();
  }
    
 })

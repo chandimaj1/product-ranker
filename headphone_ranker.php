@@ -168,7 +168,7 @@ class headphoneRanker
     function enqueue_admin(){
         //Bootstrap
         wp_enqueue_style( 'bootstrap4_styles', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.css',__FILE__));
-        wp_enqueue_script( 'bootstrap4_scripts', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.js',__FILE__), array('jquery'));
+        wp_enqueue_script( 'bootstrap4_scripts', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.js',__FILE__), array('jquery','headphoneranker_popper_scripts'));
         //Font-Awesome
         wp_enqueue_style( 'fontawesome_css', plugins_url('/assets/font_awesome/css/font-awesome.css',__FILE__));
         //Admin scripts and styles
@@ -177,6 +177,8 @@ class headphoneRanker
         //Select2
         wp_enqueue_style( 'headphoneranker_select2_styles', plugins_url('/assets/select2/select2.css',__FILE__));
         wp_enqueue_script( 'headphoneranker_select2_scripts', plugins_url('/assets/select2/select2.full.js',__FILE__), array('jquery'));
+        //Popper
+        wp_enqueue_script( 'headphoneranker_popper_scripts', plugins_url('/assets/popper/popper.min.js',__FILE__), array('jquery'));
     }
 
     //Enqueue on all other pages

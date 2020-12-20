@@ -1,12 +1,9 @@
-/**
-
-    PRODUCT SPECIFIC TABLE MODIFIERS
-*/
+/*
+    Remove column titles on device change
+**/
 [hr_showing="iem"] .hrt_principle{
-    display: none;
+    display: none !important;
 }
-
-
 
 
 #admin-title{
@@ -98,6 +95,29 @@
     background-color: #efe;
 }
 
+#hranker_table th{
+    cursor: help;
+}
+
+
+/*
+    UI Messages
+*/
+.hr_hidden{
+    opacity: 0;
+    display: none; 
+    pointer-events: none;
+}
+
+#hr_search_cancel{
+   display: none;
+}
+    .hr_search_active #hr_search{
+        display:none;
+    }
+    .hr_search_active #hr_search_cancel{
+        display: block;
+    }
 
 
 .hr_locked{
