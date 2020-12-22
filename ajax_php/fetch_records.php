@@ -28,17 +28,74 @@ function fetch_paginated_result_ids(){
 
         $sql = "SELECT DISTINCT id FROM $table_name $sort";
 
+        //Filtrations
+        $filter_principle = true;
+        $filter_genre = true;
+        $filter_price = true;
+        $filter_sql = '';
 
-        if( isset($_POST['search']) && $_POST['search']!="" ){
-            $search_text = sanitize_text_field( $_POST['search'] );
-
-            if($_POST['table']=="headphones"){
-                $sql = "SELECT DISTINCT id FROM $table_name WHERE (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
-            }
-
-            //$_POST["pagination"]=1; 
+        //-- Principle
+        if(  isset($_POST['filter_principle'])  &&  ($_POST['filter_principle'] != "any")  &&  ($_POST['table']=="headphones")   ){
+            $filter_sql = "( principle LIKE BINARY '%".$_POST['filter_principle']."%')";
+        }else{
+            $filter_principle = false;
         }
 
+        //-- Genre
+        if ( $filter_principle ){
+            $and = " AND";
+        }else{
+            $and = "";
+        }
+
+        if(  isset($_POST['filter_genre'])  &&  ($_POST['filter_genre'] != "any")  ){
+            $filter_sql .= " $and ( ganre_focus LIKE BINARY '%".$_POST['filter_genre']."%')";
+        }else{
+            $filter_genre = false;
+        }
+
+
+        //Price
+        if ( $filter_principle || $filter_genre ){
+            $and = " AND";
+        }else{
+            $and = "";
+        }
+
+        if(  isset($_POST['filter_price_from'])  &&  isset($_POST['filter_price_to'])  &&  ( (int)$_POST['filter_price_to'] > (int)$_POST['filter_price_from'])  ){
+                $filter_sql .= " $and ( price BETWEEN ".(int)$_POST['filter_price_from']." AND ".(int)$_POST['filter_price_to'].")";
+        }else{
+            $filter_price = false;
+        }
+
+
+        /**
+         * 
+         * Select table based on filters
+         */
+        if (  $filter_principle || $filter_genre || $filter_price ){
+            $select_from = "( SELECT * FROM $table_name WHERE ".$filter_sql." ) AS filtered_table";
+        }else{
+            $select_from = $table_name;
+        }
+
+        /**
+         * 
+         * Search 
+         */
+        if( isset($_POST['search']) && $_POST['search']!=""){
+            $search_text = sanitize_text_field( $_POST['search'] );
+
+            if( $_POST['table']=="headphones" ){
+                $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
+            }else if( $_POST['table']=="iem" ){
+                $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
+            }
+        }else if (  $filter_principle || $filter_genre || $filter_price  ){
+            $sql = "SELECT DISTINCT id FROM $table_name WHERE $filter_sql";
+        }
+
+        //echo ("sql:".$sql);
         $result = $wpdb->get_results( $sql );
         
 
@@ -53,7 +110,7 @@ function fetch_paginated_result_ids(){
 
     $result = array_chunk($result, $array_chunk_size);
 
-    $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort);
+    $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort, "sql"=>$sql, "filters"=>array("principle"=>$_POST["filter_principle"], "genre"=>$_POST["filter_genre"], "from"=>(int)$_POST["filter_price_from"], "to"=>(int)$_POST["filter_price_to"]) );
     return ($return);
 }
 $return = fetch_paginated_result_ids();
@@ -183,9 +240,12 @@ $paginationHtml = create_paginationHTML($total_pages, $request_page);
                     foreach ($term_split as $t){
                         $t = ltrim($t); //Remove Spaces at begining
                         $t = rtrim($t); //Remove Spaces at end
-                        array_push($filter_formatted,$t);
+
+                        if ($t != ""){ //Remove Empty $t values
+                            array_push($filter_formatted,$t);
+                        }
                     }
-                }else{
+                }else if( $term!="" ){
                     array_push($filter_formatted,$term);
                 }
             }
@@ -193,8 +253,8 @@ $paginationHtml = create_paginationHTML($total_pages, $request_page);
 
             $filter_formatted = array_unique($filter_formatted); //Remove duplicates
             //var_dump($filter_formatted);
-            sort($filter_formatted); //Sort
-            //var_dump($filter_formatted);        
+            sort($filter_formatted); //Sort Ascending
+            //var_dump($filter_formatted); 
         }else{
             $filter_formatted = false;
         }

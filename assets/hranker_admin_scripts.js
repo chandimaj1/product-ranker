@@ -677,7 +677,12 @@ function get_table_results(){
         //Search Status
         "search" :$('#hr_search_term').val(),
         //Pagination Info
-        "pagination" : $('#pagination').attr('current_page')
+        "pagination" : $('#pagination').attr('current_page'),
+        //Filtration Info
+        "filter_principle" : $('#filter_principle').val(),
+        "filter_genre" : $('#filter_genre').val(),
+        "filter_price_from" : $('#hr_price_from').val(),
+        "filter_price_to" : $('#hr_price_to').val()
     }
     console.log('Request parameters:');
     console.log(ajax_data);
@@ -689,7 +694,7 @@ function get_table_results(){
 
         success: function(data)
         {   
-            console.log(data);
+            //console.log(data);
             
 
             try {
@@ -714,7 +719,7 @@ function get_table_results(){
                 //ADD TABLE ROWS
                 add_data_to_table(data[1].page_data);
                 set_pagination(data.paginationHtml);
-                set_filters(data[2]);
+                set_filters(data[2], data[0].filters);
             }else{
                 console.log("Error... ");
                 console.log(data);
@@ -743,6 +748,10 @@ function add_data_to_table(data){
     $('#hranker_table tbody').html('');
 
     data.forEach(function(item){
+
+       
+
+
         let row = 
         `<tr id="`+item.id+`">
             <td class="hrt_select"><input type="checkbox" class="form_control"/></td>
@@ -750,10 +759,10 @@ function add_data_to_table(data){
             <td class="hrt_device">`+item.device+`</td>
             <td class="hrt_price">`+item.price+`</td>
             <td class="hrt_value">`+item.value+`</td>
-            <td class="hrt_principle">`+item.principle+`</td>
-            <td class="hrt_overall_timbre">`+item.overall_timbre+`</td>
+            <td class="hrt_principle">`+format_comma_seperated_text(item.principle)+`</td>
+            <td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
             <td class="hrt_summary">`+item.summary+`</td>
-            <td class="hrt_ganre_focus">`+item.ganre_focus+`</td>
+            <td class="hrt_ganre_focus">`+format_comma_seperated_text(item.ganre_focus)+`</td>
         </tr>`;
 
         //Formatting template for each device type
@@ -762,7 +771,7 @@ function add_data_to_table(data){
         if(device_type=="headphones"){
             //Do nothinge
         }else if(device_type=="iem"){
-            row = row.replace('<td class="hrt_principle">'+item.principle+'</td>','');
+            row = row.replace('<td class="hrt_principle">'+items_principle_html+'</td>','');
         }
         
         $('#hranker_table tbody').append(row);
@@ -775,6 +784,16 @@ function add_data_to_table(data){
     });  
 }
 
+function format_comma_seperated_text(text){
+    let items = text.split(',');
+    let items_html = '';
+    items.forEach(function(itm,index){
+        items[index] = '<span>'+itm.trim()+'</span>';
+        items_html += items[index];
+    });
+    //console.log(items_principle);
+    return items_html;
+}
 
 
 
@@ -822,8 +841,44 @@ function set_pagination(paginationHtml){
  * 
  *  Set Filters
  */
-function set_filters(filters){
-    
+function set_filters(filters, selected_filters){
+
+    $('#filter_principle').html('<option  value="any">Any</option>');
+    $('#filter_genre').html('<option  value="any">Any</option>');
+   
+    if(filters.principle && filters.principle.length>0){
+        filters.principle.forEach(function(item,index){
+            $('#filter_principle').append('<option value="'+item+'">'+item+'</option>');
+        });
+        $('#filter_principle').val(selected_filters.principle);
+    }
+   
+    if(filters.genre && filters.genre.length>0){
+        filters.genre.forEach(function(item){
+            $('#filter_genre').append('<option value="'+item+'">'+item+'</option>');
+        });
+        $('#filter_genre').val(selected_filters.genre);
+    }
+
+    $('#hr_price_from').val( parseInt(selected_filters.from) );
+    $('#hr_price_to').val( parseInt(selected_filters.to) );
+ 
+    $('#filter_principle, #filter_genre').unbind('change').change(function(){
+        if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
+            get_table_results();
+        }
+    });
+
+    $('#hr_price_from, #hr_price_to').unbind('change').change(function(){
+        if( $('#hr_price_from').val() >=0 && $('#hr_price_to').val() >0 && $('#hr_price_to').val()>$('#hr_price_from').val() ){
+            get_table_results();
+        }
+    });
+
+
+    //Select 2
+    $("#filter_principle, #filter_genre").select2("destroy");
+    $("#filter_principle, #filter_genre").select2();
 }
 
 
@@ -974,6 +1029,9 @@ $(document).ready(function() {
 
      //Enable Tooltips
      $('[data-toggle="tooltip"]').tooltip();
+
+     //Select 2
+     $("#filter_principle, #filter_genre").select2();
  }
    
 })

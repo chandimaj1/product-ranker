@@ -20,7 +20,7 @@ if (! defined( 'ABSPATH') ){
 </div>
 
 <div class="container" id="admin-container">
-    <div class="row" style="margin-top:10px !important; margin-bottom:10px;">
+    <div class="row" style="margin-top:10px !important;">
         <div class="col-md-4">
             <h5 id="admin-title">HRanker Product Manager</h5>
         </div> 
@@ -43,7 +43,7 @@ if (! defined( 'ABSPATH') ){
     <hr />
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
             <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
             <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
                 <div class="custom-file" style="display:none">
@@ -54,21 +54,24 @@ if (! defined( 'ABSPATH') ){
             <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
             <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
         </div>
-        <div class="col-md-2">
-            <select id="filter">
-                <option value="headphones" selected>Headphones</option>
-                <option value="iem" >IEM</option>
-                <option value="earbuds" >Earbuds</option>
-            </select>
+        <div class="col-md-4">
+            <div class="row">
+                <select id="filter_principle" class="col-md-4">
+                    <option value="any" selected>Any</option>
+                </select>
+                <select id="filter_genre" class="col-md-4"> 
+                    <option value="any" selected>Any</option> 
+                </select>
+                
+                <div class="col-md-4">
+                    <div class="row" id="filter_price">
+                        <input type=number id="hr_price_from" class="form-control col-sm-6" placeholder="From:" min=0>
+                        <input type=number id="hr_price_to" class="form-control col-sm-6" placeholder="To:" min=1>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-2">
-            <select id="filter">
-                <option value="headphones" selected>Headphones</option>
-                <option value="iem" >IEM</option>
-                <option value="earbuds" >Earbuds</option>
-            </select>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="input-group hr_locked" id="hr_search_input_group">
                 <input type="text" id="hr_search_term" class="form-control" placeholder="Search Table" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
                 <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>

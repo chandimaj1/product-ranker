@@ -125,6 +125,27 @@
     cursor: default;
 }
 
+.hrt_principle span,
+.hrt_ganre_focus span{
+    padding:4px 4px;
+    margin: 2px;
+    border-radius: 4px;
+    border: solid 1px #444;
+    display: inline-block;
+}
+.hrt_overall_timbre span{
+    display: inline-block;
+    width: 100%;
+}
+.hrt_overall_timbre span:before{
+    color: #444;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    padding-right:4px;
+    -webkit-font-smoothing: antialiased;
+    content:'\f001';
+}
 
 /*
     UI Messages
