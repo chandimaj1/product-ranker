@@ -184,109 +184,104 @@ function save_new_row(){
  */
 function hr_upload_csv(){
     $('#hr_upload_csv').click(function(){
-        const file = $('#csv_file')[0].files[0];
-        hr_status('secondary','uploading csv...');
-        if ($('#csv_file')[0].files.length==0){
-            hr_status('danger','No file selected...');
-        }else if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), ['csv']) == -1) {
-            hr_status('danger','Only CSV Files are allowed...');
-        }else{
+        hr_status('secondary','Select CSV & Click Upload.');
+        $('#csv_file').trigger('click');
 
-            /**
-             * 
-             * File Upload Script
-             */
-            let Upload = function (file) {
-                this.file = file;
-            };
-
-            Upload.prototype.getType = function() {
-                return this.file.type;
-            };
-            Upload.prototype.getSize = function() {
-                return this.file.size;
-            };
-            Upload.prototype.getName = function() {
-                return this.file.name;
-            };
-
-            Upload.prototype.doUpload = function (file) {
-
-                var that = this;
-                var formData = new FormData();
-
-                // add assoc key values, this will be posts values
-                formData.append("file", this.file, this.getName());
-                formData.append("upload_file", true);
-                formData.append( "table", $('#admin_product_select').val() );
-                console.log("uploading files..");
-
-                $.ajax({
-                    
-                    type: "POST",
-                    url:ajax_url + 'file_upload.php',
-                    xhr: function () {
-                        var myXhr = $.ajaxSettings.xhr();
-                        if (myXhr.upload) {
-                            myXhr.upload.addEventListener('progress', that.progressHandling, false);
-                        }
-                        return myXhr;
-                    },
-                    success: function (data) {
-                        data = JSON.parse(data);
-                        console.log(data);
-                        console.log("file uploaded...");
-
-                        if(data.upload=="success"){
-                            hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
-
-                            setTimeout(function(){
-                                refresh_table();
-                            },5000);
-                        }
-                    },
-                    error: function (error) {
-                        // handle error
-                        console.log("file upload failed...");
-                        console.log(error)
-                    },
-                    async: true,
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    timeout: 60000
-                });
-            };
-
-            Upload.prototype.progressHandling = function (event) {
-                var percent = 0;
-                var position = event.loaded || event.position;
-                var total = event.total;
-                if (event.lengthComputable) {
-                    percent = Math.ceil(position / total * 100);
-                }
-                // update progressbars classes so it fits your code
-                $("#hr_message:before").css("content", percent + "% ");
-            };
-
-            //Initiate file upload
-            var upload = new Upload(file);
-            upload.doUpload(file);
-        }
-    });
-
-
-    $("#hr_upload_csv").change(function () {
-        console.log('file selected');
-        var fileExtension = ['csv'];
-        if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-            hr_status('danger','Only CSV Files are allowed...')
-        }
+        $('#csv_file').unbind('change').change(function(){
+            if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), ['csv']) == -1) {
+                hr_status('danger','Only CSV Files are allowed.');
+            }else{
+                do_file_upload();
+            }
+        });
     });
 }
 
+function do_file_upload(){
 
+    const file = $('#csv_file')[0].files[0];
+    /**
+     * 
+     * File Upload Script
+     */
+    let Upload = function (file) {
+        this.file = file;
+    };
+
+    Upload.prototype.getType = function() {
+        return this.file.type;
+    };
+    Upload.prototype.getSize = function() {
+        return this.file.size;
+    };
+    Upload.prototype.getName = function() {
+        return this.file.name;
+    };
+
+    Upload.prototype.doUpload = function (file) {
+
+        var that = this;
+        var formData = new FormData();
+
+        // add assoc key values, this will be posts values
+        formData.append("file", this.file, this.getName());
+        formData.append("upload_file", true);
+        formData.append( "table", $('#admin_product_select').val() );
+        console.log("uploading files..");
+
+        $.ajax({
+            
+            type: "POST",
+            url:ajax_url + 'file_upload.php',
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                }
+                return myXhr;
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                console.log("file uploaded...");
+
+                if(data.upload=="success"){
+                    hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
+
+                    setTimeout(function(){
+                        refresh_table();
+                    },5000);
+                }
+            },
+            error: function (error) {
+                // handle error
+                console.log("file upload failed...");
+                console.log(error)
+            },
+            async: true,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000
+        });
+    };
+
+    Upload.prototype.progressHandling = function (event) {
+        var percent = 0;
+        var position = event.loaded || event.position;
+        var total = event.total;
+        if (event.lengthComputable) {
+            percent = Math.ceil(position / total * 100);
+        }
+        // update progressbars classes so it fits your code
+        $("#hr_message:before").css("content", percent + "% ");
+    };
+
+    //Initiate file upload
+    var upload = new Upload(file);
+    upload.doUpload(file);
+}
 
 
 
@@ -684,7 +679,8 @@ function get_table_results(){
         //Pagination Info
         "pagination" : $('#pagination').attr('current_page')
     }
-console.log(ajax_data);
+    console.log('Request parameters:');
+    console.log(ajax_data);
     $.ajax({     
         type: "POST",
         crossDomain: true,
@@ -694,9 +690,20 @@ console.log(ajax_data);
         success: function(data)
         {   
             console.log(data);
-            data = JSON.parse(data);
+            
+
+            try {
+                data = JSON.parse(data);
+              }
+              catch (e) {
+                console.log("error: "+e);
+              };
+
             if (data[1].msg=="success"){
                 console.log("fetch success...");
+                setTimeout(function(){
+                    hr_status('success','Table results fetched..');
+                },5000);
                 console.log(data);
 
                 $('#hranker_table thead').removeClass('hr_locked');
@@ -707,11 +714,21 @@ console.log(ajax_data);
                 //ADD TABLE ROWS
                 add_data_to_table(data[1].page_data);
                 set_pagination(data.paginationHtml);
+                set_filters(data[2]);
             }else{
                 console.log("Error... ");
                 console.log(data);
 
-                hr_status('danger','Error. Reason: (fetch ids)'+data[0].msg+' (fetch page1)'+data[1].msg);
+                if( $('#hr_search_term').val() != '' &&  $('#hr_search_input_group').hasClass('hr_search_active') ){
+                    $('#hr_search_input_group').removeClass('hr_locked');
+                    setTimeout(function(){
+                        hr_status('danger','Results not found for current search...');
+                    },2000);
+                }else{
+                    setTimeout(function(){
+                        hr_status('danger','Results could not be fetched...');
+                    },4000);
+                }
             }
         },
 
@@ -755,12 +772,7 @@ function add_data_to_table(data){
         hr_table_rowselect();
         hr_delete_selected_rows();
         hr_edit_selected_row();
-    });
-
-    setTimeout(function(){
-        hr_status('success','Table results fetched..');
-    },2000);
-    
+    });  
 }
 
 
@@ -791,7 +803,7 @@ function set_pagination(paginationHtml){
         }else{
             current_page = $(this).text();
         }
-        
+
         $('#pagination').attr( 'current_page' , current_page );
 
         get_table_results();
@@ -804,6 +816,15 @@ function set_pagination(paginationHtml){
 
 
 
+/***
+ * 
+ * 
+ * 
+ *  Set Filters
+ */
+function set_filters(filters){
+    
+}
 
 
 
@@ -875,7 +896,7 @@ function hr_search(){
         hr_status('secondary','Searching...');
 
         const search_term = $('#hr_search_term').val();
-        let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`-="
+        let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`="
         let check_chars = function(string){
             for(i = 0; i < specialChars.length;i++){
                 if(string.indexOf(specialChars[i]) > -1){

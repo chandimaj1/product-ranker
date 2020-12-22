@@ -19,38 +19,54 @@ if (! defined( 'ABSPATH') ){
     <input id="isadminpage" value="true" disabled/>
 </div>
 
-<div class="container" id="admin-container" style="margin-top:20px !important">
-    <div class="row">
-        <div class="col-sm-12">
+<div class="container" id="admin-container">
+    <div class="row" style="margin-top:10px !important; margin-bottom:10px;">
+        <div class="col-md-4">
             <h5 id="admin-title">HRanker Product Manager</h5>
+        </div> 
+        <div class="col-md-8">
+            <div class="input_group">
+                <label for="admin_product_select">Category:</label>
+                <select id="admin_product_select">
+                    <option value="headphones" selected>Headphones</option>
+                    <option value="iem" >IEM</option>
+                    <option value="earbuds" >Earbuds</option>
+                </select>
+            </div>
+        </div>
+        
             <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
             <div id="hr_message" class="text-right">Retrieving ...</div>
-        </div> 
-    </div>    
+
+    </div>
+
     <hr />
+
     <div class="row">
-    <div class="col-md-2">
-            <select id="admin_product_select">
+        <div class="col-md-5">
+            <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
+            <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
+                <div class="custom-file" style="display:none">
+                    <input type="file" class="custom-file-input" id="csv_file">
+                    <label class="custom-file-label" for="inputGroupFile04">select csv</label>
+                </div>
+            
+            <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
+            <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
+        </div>
+        <div class="col-md-2">
+            <select id="filter">
                 <option value="headphones" selected>Headphones</option>
                 <option value="iem" >IEM</option>
                 <option value="earbuds" >Earbuds</option>
             </select>
         </div>
-        <div class="col-md-4">
-            <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
-            <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
-            <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
-        </div>
-        <div class="col-md-3">
-            <div class="input-group" id="csv_upload_section">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="csv_file">
-                    <label class="custom-file-label" for="inputGroupFile04">select csv</label>
-                </div>
-                <div class="input-group-append">
-                    <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
-                </div>
-            </div>
+        <div class="col-md-2">
+            <select id="filter">
+                <option value="headphones" selected>Headphones</option>
+                <option value="iem" >IEM</option>
+                <option value="earbuds" >Earbuds</option>
+            </select>
         </div>
         <div class="col-md-3">
             <div class="input-group hr_locked" id="hr_search_input_group">
@@ -88,7 +104,7 @@ if (! defined( 'ABSPATH') ){
                     <th class="hrt_summary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         Summary<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_ganre_focus" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        Ganre Focus<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                        Genre Focus<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                 </tr>
             <thead>
             <tbody class="hr_locked">

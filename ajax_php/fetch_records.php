@@ -33,7 +33,7 @@ function fetch_paginated_result_ids(){
             $search_text = sanitize_text_field( $_POST['search'] );
 
             if($_POST['table']=="headphones"){
-                $sql = "SELECT DISTINCT id FROM $table_name WHERE (device like '%$search_text%') OR (principle like '%$search_text%')";
+                $sql = "SELECT DISTINCT id FROM $table_name WHERE (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
             }
 
             //$_POST["pagination"]=1; 
@@ -163,13 +163,78 @@ $paginationHtml = create_paginationHTML($total_pages, $request_page);
 
 
 
+//Format filters
+    function format_filters($filter_array){
+
+        if ($filter_array){
+            $filter_formatted = array();
+            //echo ("filter array:"); 
+             //var_dump($filter_array);
+            foreach ($filter_array as $term){
+                $term = $term[0];
+                //echo ("Term:");
+                //var_dump($term);
+
+                if ( isset($term) && $term!="" && strpos($term, ',') !== false) {
+                    $term_split = explode( ',', $term );
+                //  echo('term split:');
+                // var_dump($term_split);
+
+                    foreach ($term_split as $t){
+                        $t = ltrim($t); //Remove Spaces at begining
+                        $t = rtrim($t); //Remove Spaces at end
+                        array_push($filter_formatted,$t);
+                    }
+                }else{
+                    array_push($filter_formatted,$term);
+                }
+            }
+            //var_dump($filter_formatted);
+
+            $filter_formatted = array_unique($filter_formatted); //Remove duplicates
+            //var_dump($filter_formatted);
+            sort($filter_formatted); //Sort
+            //var_dump($filter_formatted);        
+        }else{
+            $filter_formatted = false;
+        }
+        
+
+        return ($filter_formatted);
+    }
+
+
+function get_filters($table){
+    global $wpdb;
+    $principle = false;
+    $genre = false;
+    $msg = "Failed. No table found";
+    
+    if ( isset($_POST['table']) ){
+        $table_name = $wpdb->prefix."hranker_".$_POST['table'];
+
+        if ( $table == "headphones" ){
+            $principle = $wpdb->get_results( "SELECT DISTINCT principle FROM $table_name ORDER BY principle ASC", ARRAY_N);
+            $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
+        }else if( $table == "iem" ){
+            $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
+        }
+
+        if( $principle ){ $principle_filters = format_filters($principle);} else { $principle_filters = false;}
+        if( $genre ){ $genre_filters = format_filters($genre);} else { $genre_filters = false;}
+        $msg = "success";
+    }
+
+    $filters = array("msg"=>$msg,"principle"=>$principle_filters, "genre"=>$genre_filters);
+    return ($filters);
+}
+$filters = get_filters($_POST['table']);
 
 
 
-
-$msg = [$return, $return_page, "paginationHtml"=>"$paginationHtml"];
+$msg = array($return, $return_page, "paginationHtml"=>"$paginationHtml", $filters);
 
 $msg = json_encode($msg);
 echo($msg);
 
-?> 
+?>
