@@ -23,17 +23,16 @@ if (! defined( 'ABSPATH') ){
     <div class="row" style="margin-top:10px !important;">
         <div class="col-md-4">
             <h5 id="admin-title">HRanker Product Manager</h5>
-        </div> 
-        <div class="col-md-8">
-            <div class="input_group">
-                <label for="admin_product_select">Category:</label>
-                <select id="admin_product_select">
-                    <option value="headphones" selected>Headphones</option>
-                    <option value="iem" >IEM</option>
-                    <option value="earbuds" >Earbuds</option>
-                </select>
-            </div>
         </div>
+        <div class="col-md-4">
+            <label for="admin_product_select" class="">Category: </label>
+            <select id="admin_product_select">
+                <option value="headphones" selected>Headphones</option>
+                <option value="iem" >IEM</option>
+                <option value="earbuds" >Earbuds</option>
+            </select>
+        </div>
+            
         
             <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
             <div id="hr_message" class="text-right">Retrieving ...</div>
@@ -54,22 +53,42 @@ if (! defined( 'ABSPATH') ){
             <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
             <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
         </div>
-        <div class="col-md-4">
-            <div class="row">
-                <select id="filter_principle" class="col-md-4">
+        <div class="col-sm-4">
+        <div class="row" id="filters_section">
+            <div class="col-sm-4 p-0">
+                <label for="filter_brand" class="small_label">Brand</label>
+                <select id="filter_brand">
                     <option value="any" selected>Any</option>
                 </select>
-                <select id="filter_genre" class="col-md-4"> 
+            </div> 
+            
+            <div class="col-sm-4 p-0">
+                <label for="filter_brand" class="small_label">Principle</label>
+                <select id="filter_principle">
+                    <option value="any" selected>Any</option>
+                </select>
+                </div> 
+            
+            <div class="col-sm-4 p-0">
+                <label for="filter_genre" class="small_label">Genre</label>
+                <select id="filter_genre"> 
                     <option value="any" selected>Any</option> 
                 </select>
-                
-                <div class="col-md-4">
-                    <div class="row" id="filter_price">
-                        <input type=number id="hr_price_from" class="form-control col-sm-6" placeholder="From:" min=0>
-                        <input type=number id="hr_price_to" class="form-control col-sm-6" placeholder="To:" min=1>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="row" id="filter_price" style="margin-top:5px">
+                    <div class="text-center col-sm-6 p-0">
+                        <label for="hr_price_from" class="small_label">Price from</label>
+                        <input type=number id="hr_price_from" class="form-control" style="width:100%; float:left" placeholder="From:" min=0>
+                    </div>
+                    <div class="text-center col-sm-6 p-0">
+                        <label for="hr_price_to" class="small_label">Price to</label>
+                        <input type=number id="hr_price_to" class="form-control" style="width:100%; float:left" placeholder="To:" min=1>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <div class="col-md-4">
             <div class="input-group hr_locked" id="hr_search_input_group">
@@ -79,7 +98,6 @@ if (! defined( 'ABSPATH') ){
             </div>
         </div>
     </div>
-    <hr />
 </div>
 
 
@@ -94,19 +112,19 @@ if (! defined( 'ABSPATH') ){
                     <th class="hrt_rank" width="6%" data-toggle="tooltip" data-placement="top" title="Ranking: A (Best) to F (Worst)">
                         Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div>
                     </th>
-                    <th class="hrt_device" width="13%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_device" width="13%" data-toggle="tooltip" data-placement="top" title="Brand and Model">
                         <span id="hr_device_name">Headphone</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_price" width="8%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_price" width="8%" data-toggle="tooltip" data-placement="top" title="Original Cost">
                         Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Worth of headphone compared to price">
                         Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Driver type and earcup design">
                         Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_overall_timbre" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_overall_timbre" data-toggle="tooltip" data-placement="top" title="One word summary for how each frequency range behaves">
                         Overall Timbre<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_summary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_summary" data-toggle="tooltip" data-placement="top" title="Short analysis of the headphones strengths and weaknesses">
                         Summary<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_ganre_focus" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <th class="hrt_ganre_focus" data-toggle="tooltip" data-placement="top" title="Types of music that showcase the headphones best qualities">
                         Genre Focus<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                 </tr>
             <thead>

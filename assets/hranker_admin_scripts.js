@@ -293,14 +293,12 @@ function do_file_upload(){
  */
 
  function hr_status(type,message){
-    setTimeout(function(){ 
         if (type=='success' || type=='danger'){
             $('#hranker_loader').hide();
         }
         $('#hr_message').css('opacity','0');
-    }, 1000);
 
-    setTimeout(function(){   
+
         $('#hr_message').css('opacity','0');
         $('#hr_message').html(message);
         $('#hr_message').removeClass('text-success');
@@ -314,7 +312,6 @@ function do_file_upload(){
         }else{
             $('#hranker_loader').stop().hide();
         }
-    }, 2000);
  }
 
 
@@ -678,7 +675,9 @@ function get_table_results(){
         "search" :$('#hr_search_term').val(),
         //Pagination Info
         "pagination" : $('#pagination').attr('current_page'),
+        "page_size" : $('#results_per_page').val(),
         //Filtration Info
+        "filter_brand" : $('#filter_brand').val(),
         "filter_principle" : $('#filter_principle').val(),
         "filter_genre" : $('#filter_genre').val(),
         "filter_price_from" : $('#hr_price_from').val(),
@@ -706,9 +705,7 @@ function get_table_results(){
 
             if (data[1].msg=="success"){
                 console.log("fetch success...");
-                setTimeout(function(){
-                    hr_status('success','Table results fetched..');
-                },5000);
+                hr_status('success','Table results fetched..');
                 console.log(data);
 
                 $('#hranker_table thead').removeClass('hr_locked');
@@ -726,13 +723,9 @@ function get_table_results(){
 
                 if( $('#hr_search_term').val() != '' &&  $('#hr_search_input_group').hasClass('hr_search_active') ){
                     $('#hr_search_input_group').removeClass('hr_locked');
-                    setTimeout(function(){
                         hr_status('danger','Results not found for current search...');
-                    },2000);
                 }else{
-                    setTimeout(function(){
-                        hr_status('danger','Results could not be fetched...');
-                    },4000);
+                        hr_status('danger','Results not found...');
                 }
             }
         },
@@ -750,7 +743,14 @@ function add_data_to_table(data){
     data.forEach(function(item){
 
        
-
+        //Formatting template for each device type
+        const device_type = $('#admin_product_select').val();
+        let row_principle = '';
+        if(device_type=="headphones"){
+            row_principle =  `<td class="hrt_principle">`+format_comma_seperated_text(item.principle)+`</td>`;
+        }else if(device_type=="iem"){
+            row_principle = '';
+        }
 
         let row = 
         `<tr id="`+item.id+`">
@@ -758,21 +758,14 @@ function add_data_to_table(data){
             <td class="hrt_rank">`+item.rank+`</td>
             <td class="hrt_device">`+item.device+`</td>
             <td class="hrt_price">`+item.price+`</td>
-            <td class="hrt_value">`+item.value+`</td>
-            <td class="hrt_principle">`+format_comma_seperated_text(item.principle)+`</td>
-            <td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
+            <td class="hrt_value">`+item.value+`</td>`
+            +row_principle+
+            `<td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
             <td class="hrt_summary">`+item.summary+`</td>
             <td class="hrt_ganre_focus">`+format_comma_seperated_text(item.ganre_focus)+`</td>
         </tr>`;
 
-        //Formatting template for each device type
-        const device_type = $('#admin_product_select').val();
         
-        if(device_type=="headphones"){
-            //Do nothinge
-        }else if(device_type=="iem"){
-            row = row.replace('<td class="hrt_principle">'+items_principle_html+'</td>','');
-        }
         
         $('#hranker_table tbody').append(row);
         $('#hranker_table').removeClass('hr_locked');
@@ -828,7 +821,13 @@ function set_pagination(paginationHtml){
         get_table_results();
     });
 
+    $('#results_per_page').unbind('change').change(function(){
+             get_table_results();
+     });
+
     $('#pagination').removeClass('hr_locked');
+
+    
 }
 
 
@@ -845,6 +844,14 @@ function set_filters(filters, selected_filters){
 
     $('#filter_principle').html('<option  value="any">Any</option>');
     $('#filter_genre').html('<option  value="any">Any</option>');
+    $('#filter_brand').html('<option  value="any">Any</option>');
+
+    if(filters.brand && filters.brand.length>0){
+        filters.brand.forEach(function(item){
+            $('#filter_brand').append('<option value="'+item+'">'+item+'</option>');
+        });
+        $('#filter_brand').val(selected_filters.brand);
+    }
    
     if(filters.principle && filters.principle.length>0){
         filters.principle.forEach(function(item,index){
@@ -863,10 +870,10 @@ function set_filters(filters, selected_filters){
     $('#hr_price_from').val( parseInt(selected_filters.from) );
     $('#hr_price_to').val( parseInt(selected_filters.to) );
  
-    $('#filter_principle, #filter_genre').unbind('change').change(function(){
-        if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
+    $('#filter_brand, #filter_principle, #filter_genre').unbind('change').change(function(){
+       // if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
             get_table_results();
-        }
+       // }
     });
 
     $('#hr_price_from, #hr_price_to').unbind('change').change(function(){
@@ -877,8 +884,8 @@ function set_filters(filters, selected_filters){
 
 
     //Select 2
-    $("#filter_principle, #filter_genre").select2("destroy");
-    $("#filter_principle, #filter_genre").select2();
+    //$("#filter_principle, #filter_genre").select2("destroy");
+    //$("#filter_principle, #filter_genre").select2();
 }
 
 
@@ -1031,7 +1038,7 @@ $(document).ready(function() {
      $('[data-toggle="tooltip"]').tooltip();
 
      //Select 2
-     $("#filter_principle, #filter_genre").select2();
+     //$("#filter_principle, #filter_genre").select2();
  }
    
 })

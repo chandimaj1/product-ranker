@@ -18,6 +18,7 @@
 */
 #hranker_table{
     border: solid 2px #eee;
+    margin-top:10px;
 }
 #hranker_table thead th{
     position: relative;
@@ -176,6 +177,24 @@
 tr.selected_row{
     background-color:#eef;
 }
+
+
+
+/*
+
+    Filter texts
+*/
+.small_label{
+    font-size:10pt;
+    margin: 0 0;
+    display: block;
+    margin-bottom:0px;
+    text-align: left;
+}
+#filters_section select{
+    width: 100%;
+}
+
 /*
  Status Messages 
  */

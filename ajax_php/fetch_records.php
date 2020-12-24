@@ -14,7 +14,13 @@ if (!isset($wpdb)){
 function fetch_paginated_result_ids(){
     global $wpdb;
     $msg = 'Error! Unknown';
-    $array_chunk_size = 10;
+
+    if ( isset($_POST['page_size']) && ((int)$_POST['page_size']>=10) ){
+        $array_chunk_size = (int)$_POST['page_size'];
+    }else{
+        $array_chunk_size = 10;
+        $_POST['page_size'] = 10;
+    }
 
     if( isset($_POST['table']) ){
         $table_name = $wpdb->prefix."hranker_".$_POST['table'];
@@ -29,14 +35,28 @@ function fetch_paginated_result_ids(){
         $sql = "SELECT DISTINCT id FROM $table_name $sort";
 
         //Filtrations
+        $filter_brand = true;
         $filter_principle = true;
         $filter_genre = true;
         $filter_price = true;
         $filter_sql = '';
 
+        //-- Brand
+        if(  isset($_POST['filter_brand'])  &&  ($_POST['filter_brand'] != "any")  ){
+            $filter_sql = "( device LIKE BINARY '".$_POST['filter_brand']."%')";
+        }else{
+            $filter_brand = false;
+        }
+
         //-- Principle
+        if ( $filter_brand ){
+            $and = " AND";
+        }else{
+            $and = "";
+        }
+
         if(  isset($_POST['filter_principle'])  &&  ($_POST['filter_principle'] != "any")  &&  ($_POST['table']=="headphones")   ){
-            $filter_sql = "( principle LIKE BINARY '%".$_POST['filter_principle']."%')";
+            $filter_sql = " $and ( principle LIKE BINARY '%".$_POST['filter_principle']."%')";
         }else{
             $filter_principle = false;
         }
@@ -73,7 +93,7 @@ function fetch_paginated_result_ids(){
          * 
          * Select table based on filters
          */
-        if (  $filter_principle || $filter_genre || $filter_price ){
+        if (  $filter_brand || $filter_principle || $filter_genre || $filter_price ){
             $select_from = "( SELECT * FROM $table_name WHERE ".$filter_sql." ) AS filtered_table";
         }else{
             $select_from = $table_name;
@@ -91,7 +111,7 @@ function fetch_paginated_result_ids(){
             }else if( $_POST['table']=="iem" ){
                 $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
             }
-        }else if (  $filter_principle || $filter_genre || $filter_price  ){
+        }else if (  $filter_brand || $filter_principle || $filter_genre || $filter_price  ){
             $sql = "SELECT DISTINCT id FROM $table_name WHERE $filter_sql";
         }
 
@@ -110,7 +130,7 @@ function fetch_paginated_result_ids(){
 
     $result = array_chunk($result, $array_chunk_size);
 
-    $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort, "sql"=>$sql, "filters"=>array("principle"=>$_POST["filter_principle"], "genre"=>$_POST["filter_genre"], "from"=>(int)$_POST["filter_price_from"], "to"=>(int)$_POST["filter_price_to"]) );
+    $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort, "sql"=>$sql, "filters"=>array("brand"=>$_POST["filter_brand"],"principle"=>$_POST["filter_principle"], "genre"=>$_POST["filter_genre"], "from"=>(int)$_POST["filter_price_from"], "to"=>(int)$_POST["filter_price_to"]) );
     return ($return);
 }
 $return = fetch_paginated_result_ids();
@@ -205,13 +225,28 @@ function create_paginationHTML($total_pages, $request_page){
 
     $paginationHtml_info = "Page $request_page of $total_pages";
 
+    $arr = [10,25,50,100];
+    $page_select_html = "<select id='results_per_page'>";
+    foreach ($arr as $i){
+        if ($i == (int)$_POST['page_size']){
+            $ifpgselected = "selected";
+        }else{
+            $ifpgselected = "";
+        }
+        $page_select_html .= "<option value='$i' $ifpgselected >$i</option>"; 
+    }
+    $page_select_html .= "</select>";
+
     $paginationHtml = 
         "<div class='page-nav td-pb-padding-side'>"
             .$paginationHtml_previous
             .$paginationHtml_pages
             .$paginationHtml_next
-            .'<span class="pages" id="pagination_info">'.$paginationHtml_info.'</span>'
-            .'<div class="clearfix"></div>'
+            ."<span class='pages' id='pagination_info'>Showing "
+            .$page_select_html
+            ." results per page on $paginationHtml_info </span> "
+            //.'<span class="pages" id="pagination_info">'.$paginationHtml_info.'</span>'
+           // .'<div class="clearfix"></div>'
         ."</div>";
 
     return ($paginationHtml);
@@ -264,6 +299,49 @@ $paginationHtml = create_paginationHTML($total_pages, $request_page);
     }
 
 
+    function format_filters_brand($brand){
+        if ($brand){
+            $filter_formatted = array();
+            //echo ("filter array:"); 
+             //var_dump($filter_array);
+            foreach ($brand as $term){
+                $term = $term[0];
+                //echo ("Term:");
+                //var_dump($term);
+
+                if ( isset($term) && $term!="" && strpos($term, ' ') !== false) {
+                    $term_split = explode( ' ', $term );
+                //  echo('term split:');
+                // var_dump($term_split);
+
+                    //foreach ($term_split as $t){
+                        $t = $term_split[0];
+                        $t = ltrim($t); //Remove Spaces at begining
+                        $t = rtrim($t); //Remove Spaces at end
+
+                        if ($t != ""){ //Remove Empty $t values
+                            array_push($filter_formatted,$t);
+                        }
+                    //}
+                }else if( $term!="" ){
+                    array_push($filter_formatted,$term);
+                }
+            }
+            //var_dump($filter_formatted);
+
+            $filter_formatted = array_unique($filter_formatted); //Remove duplicates
+            //var_dump($filter_formatted);
+            sort($filter_formatted); //Sort Ascending
+            //var_dump($filter_formatted); 
+        }else{
+            $filter_formatted = false;
+        }
+        
+
+        return ($filter_formatted);
+    }
+
+
 function get_filters($table){
     global $wpdb;
     $principle = false;
@@ -276,16 +354,19 @@ function get_filters($table){
         if ( $table == "headphones" ){
             $principle = $wpdb->get_results( "SELECT DISTINCT principle FROM $table_name ORDER BY principle ASC", ARRAY_N);
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
+            $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
         }else if( $table == "iem" ){
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
+            $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
         }
 
         if( $principle ){ $principle_filters = format_filters($principle);} else { $principle_filters = false;}
         if( $genre ){ $genre_filters = format_filters($genre);} else { $genre_filters = false;}
+        if( $brand ){ $brand_filters = format_filters_brand($brand);} else { $brand_filters = false;}
         $msg = "success";
     }
 
-    $filters = array("msg"=>$msg,"principle"=>$principle_filters, "genre"=>$genre_filters);
+    $filters = array("msg"=>$msg,"principle"=>$principle_filters, "genre"=>$genre_filters, "brand"=>$brand_filters);
     return ($filters);
 }
 $filters = get_filters($_POST['table']);
