@@ -184,109 +184,104 @@
      */
     function hr_upload_csv(){
         $('#hr_upload_csv').click(function(){
-            const file = $('#csv_file')[0].files[0];
-            hr_status('secondary','uploading csv...');
-            if ($('#csv_file')[0].files.length==0){
-                hr_status('danger','No file selected...');
-            }else if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), ['csv']) == -1) {
-                hr_status('danger','Only CSV Files are allowed...');
-            }else{
+            hr_status('secondary','Select CSV & Click Upload.');
+            $('#csv_file').trigger('click');
     
-                /**
-                 * 
-                 * File Upload Script
-                 */
-                let Upload = function (file) {
-                    this.file = file;
-                };
-    
-                Upload.prototype.getType = function() {
-                    return this.file.type;
-                };
-                Upload.prototype.getSize = function() {
-                    return this.file.size;
-                };
-                Upload.prototype.getName = function() {
-                    return this.file.name;
-                };
-    
-                Upload.prototype.doUpload = function (file) {
-    
-                    var that = this;
-                    var formData = new FormData();
-    
-                    // add assoc key values, this will be posts values
-                    formData.append("file", this.file, this.getName());
-                    formData.append("upload_file", true);
-                    formData.append( "table", $('#admin_product_select').val() );
-                    console.log("uploading files..");
-    
-                    $.ajax({
-                        
-                        type: "POST",
-                        url:ajax_url + 'file_upload.php',
-                        xhr: function () {
-                            var myXhr = $.ajaxSettings.xhr();
-                            if (myXhr.upload) {
-                                myXhr.upload.addEventListener('progress', that.progressHandling, false);
-                            }
-                            return myXhr;
-                        },
-                        success: function (data) {
-                            data = JSON.parse(data);
-                            console.log(data);
-                            console.log("file uploaded...");
-    
-                            if(data.upload=="success"){
-                                hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
-    
-                                setTimeout(function(){
-                                    refresh_table();
-                                },5000);
-                            }
-                        },
-                        error: function (error) {
-                            // handle error
-                            console.log("file upload failed...");
-                            console.log(error)
-                        },
-                        async: true,
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        timeout: 60000
-                    });
-                };
-    
-                Upload.prototype.progressHandling = function (event) {
-                    var percent = 0;
-                    var position = event.loaded || event.position;
-                    var total = event.total;
-                    if (event.lengthComputable) {
-                        percent = Math.ceil(position / total * 100);
-                    }
-                    // update progressbars classes so it fits your code
-                    $("#hr_message:before").css("content", percent + "% ");
-                };
-    
-                //Initiate file upload
-                var upload = new Upload(file);
-                upload.doUpload(file);
-            }
-        });
-    
-    
-        $("#hr_upload_csv").change(function () {
-            console.log('file selected');
-            var fileExtension = ['csv'];
-            if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-                hr_status('danger','Only CSV Files are allowed...')
-            }
+            $('#csv_file').unbind('change').change(function(){
+                if ($.inArray($('#csv_file').val().split('.').pop().toLowerCase(), ['csv']) == -1) {
+                    hr_status('danger','Only CSV Files are allowed.');
+                }else{
+                    do_file_upload();
+                }
+            });
         });
     }
     
+    function do_file_upload(){
     
+        const file = $('#csv_file')[0].files[0];
+        /**
+         * 
+         * File Upload Script
+         */
+        let Upload = function (file) {
+            this.file = file;
+        };
+    
+        Upload.prototype.getType = function() {
+            return this.file.type;
+        };
+        Upload.prototype.getSize = function() {
+            return this.file.size;
+        };
+        Upload.prototype.getName = function() {
+            return this.file.name;
+        };
+    
+        Upload.prototype.doUpload = function (file) {
+    
+            var that = this;
+            var formData = new FormData();
+    
+            // add assoc key values, this will be posts values
+            formData.append("file", this.file, this.getName());
+            formData.append("upload_file", true);
+            formData.append( "table", $('#admin_product_select').val() );
+            console.log("uploading files..");
+    
+            $.ajax({
+                
+                type: "POST",
+                url:ajax_url + 'file_upload.php',
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                    }
+                    return myXhr;
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    console.log(data);
+                    console.log("file uploaded...");
+    
+                    if(data.upload=="success"){
+                        hr_status('success','CSV Uploaded. Inserted:'+data.db_msg.totalInserted+' of '+data.db_msg.totalInCSV);
+    
+                        setTimeout(function(){
+                            refresh_table();
+                        },5000);
+                    }
+                },
+                error: function (error) {
+                    // handle error
+                    console.log("file upload failed...");
+                    console.log(error)
+                },
+                async: true,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                timeout: 60000
+            });
+        };
+    
+        Upload.prototype.progressHandling = function (event) {
+            var percent = 0;
+            var position = event.loaded || event.position;
+            var total = event.total;
+            if (event.lengthComputable) {
+                percent = Math.ceil(position / total * 100);
+            }
+            // update progressbars classes so it fits your code
+            $("#hr_message:before").css("content", percent + "% ");
+        };
+    
+        //Initiate file upload
+        var upload = new Upload(file);
+        upload.doUpload(file);
+    }
     
     
     
@@ -298,14 +293,12 @@
      */
     
      function hr_status(type,message){
-        setTimeout(function(){ 
             if (type=='success' || type=='danger'){
                 $('#hranker_loader').hide();
             }
             $('#hr_message').css('opacity','0');
-        }, 1000);
     
-        setTimeout(function(){   
+    
             $('#hr_message').css('opacity','0');
             $('#hr_message').html(message);
             $('#hr_message').removeClass('text-success');
@@ -319,7 +312,6 @@
             }else{
                 $('#hranker_loader').stop().hide();
             }
-        }, 2000);
      }
     
     
@@ -682,7 +674,14 @@
             //Search Status
             "search" :$('#hr_search_term').val(),
             //Pagination Info
-            "pagination" : $('#pagination').attr('current_page')
+            "pagination" : $('#pagination').attr('current_page'),
+            "page_size" : $('#results_per_page').val(),
+            //Filtration Info
+            "filter_brand" : $('#filter_brand').val(),
+            "filter_principle" : $('#filter_principle').val(),
+            "filter_genre" : $('#filter_genre').val(),
+            "filter_price_from" : $('#hr_price_from').val(),
+            "filter_price_to" : $('#hr_price_to').val()
         }
         console.log('Request parameters:');
         console.log(ajax_data);
@@ -694,7 +693,7 @@
     
             success: function(data)
             {   
-                console.log(data);
+                //console.log(data);
                 
     
                 try {
@@ -706,9 +705,7 @@
     
                 if (data[1].msg=="success"){
                     console.log("fetch success...");
-                    setTimeout(function(){
-                        hr_status('success','Table results fetched..');
-                    },5000);
+                    hr_status('success','Table results fetched..');
                     console.log(data);
     
                     $('#hranker_table thead').removeClass('hr_locked');
@@ -719,19 +716,16 @@
                     //ADD TABLE ROWS
                     add_data_to_table(data[1].page_data);
                     set_pagination(data.paginationHtml);
+                    set_filters(data[2], data[0].filters);
                 }else{
                     console.log("Error... ");
                     console.log(data);
     
                     if( $('#hr_search_term').val() != '' &&  $('#hr_search_input_group').hasClass('hr_search_active') ){
                         $('#hr_search_input_group').removeClass('hr_locked');
-                        setTimeout(function(){
                             hr_status('danger','Results not found for current search...');
-                        },2000);
                     }else{
-                        setTimeout(function(){
-                            hr_status('danger','Results could not be fetched...');
-                        },4000);
+                            hr_status('danger','Results not found...');
                     }
                 }
             },
@@ -747,27 +741,31 @@
         $('#hranker_table tbody').html('');
     
         data.forEach(function(item){
+    
+           
+            //Formatting template for each device type
+            const device_type = $('#admin_product_select').val();
+            let row_principle = '';
+            if(device_type=="headphones"){
+                row_principle =  `<td class="hrt_principle">`+format_comma_seperated_text(item.principle)+`</td>`;
+            }else if(device_type=="iem"){
+                row_principle = '';
+            }
+    
             let row = 
             `<tr id="`+item.id+`">
                 <td class="hrt_select"><input type="checkbox" class="form_control"/></td>
                 <td class="hrt_rank">`+item.rank+`</td>
                 <td class="hrt_device">`+item.device+`</td>
                 <td class="hrt_price">`+item.price+`</td>
-                <td class="hrt_value">`+item.value+`</td>
-                <td class="hrt_principle">`+item.principle+`</td>
-                <td class="hrt_overall_timbre">`+item.overall_timbre+`</td>
+                <td class="hrt_value">`+item.value+`</td>`
+                +row_principle+
+                `<td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
                 <td class="hrt_summary">`+item.summary+`</td>
-                <td class="hrt_ganre_focus">`+item.ganre_focus+`</td>
+                <td class="hrt_ganre_focus">`+format_comma_seperated_text(item.ganre_focus)+`</td>
             </tr>`;
     
-            //Formatting template for each device type
-            const device_type = $('#admin_product_select').val();
             
-            if(device_type=="headphones"){
-                //Do nothinge
-            }else if(device_type=="iem"){
-                row = row.replace('<td class="hrt_principle">'+item.principle+'</td>','');
-            }
             
             $('#hranker_table tbody').append(row);
             $('#hranker_table').removeClass('hr_locked');
@@ -779,6 +777,16 @@
         });  
     }
     
+    function format_comma_seperated_text(text){
+        let items = text.split(',');
+        let items_html = '';
+        items.forEach(function(itm,index){
+            items[index] = '<span>'+itm.trim()+'</span>';
+            items_html += items[index];
+        });
+        //console.log(items_principle);
+        return items_html;
+    }
     
     
     
@@ -813,13 +821,73 @@
             get_table_results();
         });
     
+        $('#results_per_page').unbind('change').change(function(){
+                 get_table_results();
+         });
+    
         $('#pagination').removeClass('hr_locked');
+    
+        
     }
     
     
     
     
     
+    /***
+     * 
+     * 
+     * 
+     *  Set Filters
+     */
+    function set_filters(filters, selected_filters){
+    
+        $('#filter_principle').html('<option  value="any">Any</option>');
+        $('#filter_genre').html('<option  value="any">Any</option>');
+        $('#filter_brand').html('<option  value="any">Any</option>');
+    
+        if(filters.brand && filters.brand.length>0){
+            filters.brand.forEach(function(item){
+                $('#filter_brand').append('<option value="'+item+'">'+item+'</option>');
+            });
+            $('#filter_brand').val(selected_filters.brand);
+        }
+       
+        if(filters.principle && filters.principle.length>0){
+            filters.principle.forEach(function(item,index){
+                $('#filter_principle').append('<option value="'+item+'">'+item+'</option>');
+            });
+            $('#filter_principle').val(selected_filters.principle);
+        }
+       
+        if(filters.genre && filters.genre.length>0){
+            filters.genre.forEach(function(item){
+                $('#filter_genre').append('<option value="'+item+'">'+item+'</option>');
+            });
+            $('#filter_genre').val(selected_filters.genre);
+        }
+    
+        $('#hr_price_from').val( parseInt(selected_filters.from) );
+        $('#hr_price_to').val( parseInt(selected_filters.to) );
+     
+        $('#filter_brand, #filter_principle, #filter_genre').unbind('change').change(function(){
+           // if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
+                get_table_results();
+           // }
+        });
+    
+        $('#hr_price_from, #hr_price_to').unbind('change').change(function(){
+            if( $('#hr_price_from').val() >=0 && $('#hr_price_to').val() >0 && $('#hr_price_to').val()>$('#hr_price_from').val() ){
+                get_table_results();
+            }
+        });
+    
+    
+        //Select 2
+        $("#filter_brand").select2("destroy").select2({dropdownPosition: 'below'});
+        $("#filter_principle").select2("destroy").select2({dropdownPosition: 'below'});
+        $("#filter_genre").select2("destroy").select2({dropdownPosition: 'below'});
+    }
     
     
     
@@ -891,7 +959,7 @@
             hr_status('secondary','Searching...');
     
             const search_term = $('#hr_search_term').val();
-            let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`-="
+            let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`="
             let check_chars = function(string){
                 for(i = 0; i < specialChars.length;i++){
                     if(string.indexOf(specialChars[i]) > -1){
@@ -953,14 +1021,19 @@
      */
     $(document).ready(function() {
         console.log('HRanker Product Manager - Scripts Ready()');
+
+        //Select 2
+        $("#filter_brand").select2({dropdownPosition: 'below'});
+        $("#filter_principle").select2({dropdownPosition: 'below'});
+        $("#filter_genre").select2({dropdownPosition: 'below'});
     
      // --- Execute Admin page specific functions   
-     //if($('#isadminpage').val()=="true"){
+
          //Event Listeners
-         hr_new_entry(); // new entry click
-         hr_category_change();// category select change
+       //  hr_new_entry(); // new entry click
+       //  hr_category_change();// category select change
          hr_listen_sort(); // Sorting
-         hr_upload_csv(); // CSV upload
+       //  hr_upload_csv(); // CSV upload
          hr_search(); // Search
          cancel_search()// Cancel Search
      
@@ -969,7 +1042,6 @@
     
          //Enable Tooltips
          $('[data-toggle="tooltip"]').tooltip();
-     //}
        
     })
     

@@ -125,6 +125,27 @@
     cursor: default;
 }
 
+.hrt_principle span,
+.hrt_ganre_focus span{
+    padding:4px 4px;
+    margin: 2px;
+    border-radius: 4px;
+    border: solid 1px #444;
+    display: inline-block;
+}
+.hrt_overall_timbre span{
+    display: inline-block;
+    width: 100%;
+}
+.hrt_overall_timbre span:before{
+    color: #444;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    padding-right:4px;
+    -webkit-font-smoothing: antialiased;
+    content:'\f001';
+}
 
 /*
     UI Messages
@@ -154,6 +175,115 @@
 
 tr.selected_row{
     background-color:#eef;
+}
+
+
+
+/*
+
+    Filter texts
+*/
+.small_label{
+    font-size:14pt;
+    margin: 10px 0;
+    display: block;
+    margin-bottom:5px;
+    text-align: left;
+}
+#filters_row select{
+    width: 100%;
+}
+#filters_row>.row{
+   padding-right:30px;
+
+}
+
+#filters_row{
+    border-right: solid 1px #000;
+    padding-bottom: 30px !important;
+    margin-bottom:15px !important;
+}
+
+#filters_row:after{
+    content:'OR';
+    position: absolute; 
+    font-size: 16pt;
+    padding:10px;
+    right: -25px;
+    top:100px;
+    background-color: #fff;
+    
+}
+
+#search_div .row{
+    padding: 0 0 0 0;
+    padding-left:30px !important;
+    width: 100%;
+}
+#filter_price .col-sm-6{
+    position: relative;
+    height: 42px !important;
+    border: solid 1px #000 !important;
+    border-radius: 2px !important;
+    width: 50%;
+    float: left;
+    overflow: hidden;
+}
+#filter_price input{
+    position: absolute;
+    height: 42px;
+    width: 100%;
+    left: 0px;
+    top:0px;
+    padding-left:50%;
+    border: none;
+    font-size: 14pt;
+}
+ .txtlbl{
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    color: #666;
+    left: 0;
+    z-index: 1;
+    line-height: 42px;
+    padding-left: 5px;
+    top: 0;
+ }
+
+ #hr_search_term, #hr_search, #hr_search_cancel{
+     height: 42px;
+     line-height: 42px;
+     border: solid 1px #000;
+     border-radius: 0px;
+ }
+    #hr_search, #hr_search_cancel{
+        font-size: 12pt !important;
+        line-height: 5px;
+    }
+    #hr_search{
+        background-color: darkblue;
+    }
+
+
+#hr_price_from:before{
+    position: absolute;
+    content:'From:';
+    color: #666;
+    left:4px;
+}
+
+.select2-container .select2-selection--single{
+    height: 42px !important;
+    border: solid 1px #000 !important;
+    border-radius: 2px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 42px !important;
+    color:#666 !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+    height:42px !important;
 }
 /*
  Status Messages 

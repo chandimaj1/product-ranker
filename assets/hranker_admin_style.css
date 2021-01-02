@@ -18,7 +18,6 @@
 */
 #hranker_table{
     border: solid 2px #eee;
-    margin-top:10px;
 }
 #hranker_table thead th{
     position: relative;
@@ -188,11 +187,19 @@ tr.selected_row{
     font-size:10pt;
     margin: 0 0;
     display: block;
-    margin-bottom:0px;
-    text-align: left;
+    margin-bottom:5px;
+    text-align: center;
 }
-#filters_section select{
+#filters_row select{
     width: 100%;
+}
+#filters_row{
+    margin-top:15px;
+    margin-bottom:10px;
+    padding: 15px 0;
+    background-color: #eee;
+    border-radius:5px;
+    box-shadow: 0 0 4px 2px #ccc;
 }
 
 /*

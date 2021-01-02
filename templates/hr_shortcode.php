@@ -20,74 +20,60 @@ if (! defined( 'ABSPATH') ){
 </div>
 
 <div class="container" id="admin-container">
-    <div class="row" style="margin-top:10px !important;">
-            <h5 id="admin-title">HRanker Product Manager</h5>
-        
+    <div class="row" style="margin-top:0px !important;">
             <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
             <div id="hr_message" class="text-right">Retrieving ...</div>
-
-    </div>
-
-    <hr />
-
-    <div class="row">
-        <div class="col-md-4">
-            <label for="admin_product_select" class="">Category: </label>
-            <select id="admin_product_select">
-                <option value="headphones" selected>Headphones</option>
-                <option value="iem" >IEM</option>
-                <option value="earbuds" >Earbuds</option>
+            <select id="admin_product_select" style="display:none !important">
+                <option value="<?= $atts["device"] ?>" selected><?= $atts["device"] ?></option>
             </select>
-        </div>
-        <div class="col-md-4">
-            <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
-            <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
-                <div class="custom-file" style="display:none">
-                    <input type="file" class="custom-file-input" id="csv_file">
-                    <label class="custom-file-label" for="inputGroupFile04">select csv</label>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0" id="filters_row">
+            <div class="row" >
+                <div class="col-sm-12">
+                    <label for="filter_brand" class="small_label">Filter by Brand</label>
+                    <select id="filter_brand">
+                        <option value="any" selected>Any</option>
+                    </select>
+                </div> 
+                
+                <div class="col-sm-12">
+                    <label for="filter_brand" class="small_label">Filter by Principle</label>
+                    <select id="filter_principle">
+                        <option value="any" selected>Any</option>
+                    </select>
+                    </div> 
+                
+                <div class="col-sm-12">
+                    <label for="filter_genre" class="small_label">Filter by Genre</label>
+                    <select id="filter_genre"> 
+                        <option value="any" selected>Any</option> 
+                    </select>
                 </div>
-            
-            <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
-            <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
-        </div>
-        <div class="col-md-4">
-            <div class="input-group hr_locked" id="hr_search_input_group">
-                <input type="text" id="hr_search_term" class="form-control" placeholder="Search Table" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
-                <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
-                <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i></button>
+
+                <div class="col-sm-12">
+                <label for="filter_price" class="small_label">Filter by Price</label>
+                    <div class="" id="filter_price">
+                        <div class="col-sm-6">
+                            <div class="txtlbl">From:</div>
+                            <input type=number id="hr_price_from" class="form-control" style="" placeholder="From" min=0>
+                        </div>
+                        <div class="col-sm-6">
+                        <div class="txtlbl">To:</div>
+                            <input type=number id="hr_price_to" class="form-control" style="" placeholder="To" min=1>
+                        </div>
+                    </div> 
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="row" id="filters_row">
-        <div class="col-sm-3">
-            <label for="filter_brand" class="small_label">Filter by Brand</label>
-            <select id="filter_brand">
-                <option value="any" selected>Any</option>
-            </select>
-        </div> 
-        
-        <div class="col-sm-3">
-            <label for="filter_brand" class="small_label">Filter by Principle</label>
-            <select id="filter_principle">
-                <option value="any" selected>Any</option>
-            </select>
-            </div> 
-        
-        <div class="col-sm-3">
-            <label for="filter_genre" class="small_label">Filter by Genre</label>
-            <select id="filter_genre"> 
-                <option value="any" selected>Any</option> 
-            </select>
-        </div>
-
-        <div class="col-sm-3">
-        <label for="filter_genre" class="small_label">Filter by Price</label>
-            <div class="" id="filter_genre">
-                <div class="text-center" style="width:20%; float:left"> From </div>
-                <input type=number id="hr_price_from" class="form-control" style="width:35%; float:left" placeholder="From:" min=0>
-                <div class="text-center" style="width:10%; float:left"> to </div>
-                <input type=number id="hr_price_to" class="form-control" style="width:35%; float:left" placeholder="To:" min=1>
+        <div class="col-md-6" id="search_div">
+            <div class="row">
+                <label for="hr_search_input_group" class="small_label">Search Headphones</label>
+                <div class="input-group hr_locked" id="hr_search_input_group">
+                    <input type="text" id="hr_search_term" class="form-control" placeholder="Search by Brand, Principle, or Ganre" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
+                    <button type="button" id="hr_search" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                    <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -111,8 +97,15 @@ if (! defined( 'ABSPATH') ){
                         Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Worth of headphone compared to price">
                         Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
-                    <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Driver type and earcup design">
+                    <?php 
+                        if ($atts["device"]!="iem"){
+                    ?>
+                            <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Driver type and earcup design">
                         Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <?php
+                        }
+                    ?>
+                    
                     <th class="hrt_overall_timbre" data-toggle="tooltip" data-placement="top" title="One word summary for how each frequency range behaves">
                         Overall Timbre<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_summary" data-toggle="tooltip" data-placement="top" title="Short analysis of the headphones strengths and weaknesses">

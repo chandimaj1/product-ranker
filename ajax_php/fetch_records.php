@@ -15,11 +15,11 @@ function fetch_paginated_result_ids(){
     global $wpdb;
     $msg = 'Error! Unknown';
 
-    if ( isset($_POST['page_size']) && ((int)$_POST['page_size']>=10) ){
+    if ( isset($_POST['page_size']) && ((int)$_POST['page_size']>=25) ){
         $array_chunk_size = (int)$_POST['page_size'];
     }else{
-        $array_chunk_size = 10;
-        $_POST['page_size'] = 10;
+        $array_chunk_size = 25;
+        $_POST['page_size'] = 25;
     }
 
     if( isset($_POST['table']) ){
@@ -30,6 +30,9 @@ function fetch_paginated_result_ids(){
         if ( isset($_POST["sort_by"])  &&  isset($_POST["sort_type"]) && $_POST["sort_by"]!="no_sort" &&  $_POST["sort_type"]!="no_sort" ){
             $sort_by = str_replace("hrt_","",$_POST['sort_by']);
             $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
+
+            //Reset Pagination
+            $_POST['pagination']=1;
         }
 
         $sql = "SELECT DISTINCT id FROM $table_name $sort";
@@ -225,7 +228,7 @@ function create_paginationHTML($total_pages, $request_page){
 
     $paginationHtml_info = "Page $request_page of $total_pages";
 
-    $arr = [10,25,50,100];
+    $arr = [25,50,100,1000];
     $page_select_html = "<select id='results_per_page'>";
     foreach ($arr as $i){
         if ($i == (int)$_POST['page_size']){
@@ -233,7 +236,9 @@ function create_paginationHTML($total_pages, $request_page){
         }else{
             $ifpgselected = "";
         }
-        $page_select_html .= "<option value='$i' $ifpgselected >$i</option>"; 
+        $itxt = $i;
+        if($i==1000){$itxt="All";}
+        $page_select_html .= "<option value='$i' $ifpgselected >$itxt</option>"; 
     }
     $page_select_html .= "</select>";
 
