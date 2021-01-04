@@ -65,7 +65,7 @@ class headphoneRanker
 
 
     function add_admin_pages(){
-        add_menu_page( 'Headphone Ranker Settings', 'HRanker Settings', 'manage_options', 'headphone_ranker_settings', array($this,'admin_index'), 'dashicons-pdf', 100);
+        add_menu_page( 'Headphone Ranker Settings', 'HRanker Settings', 'manage_options', 'headphone_ranker_settings', array($this,'admin_index'), 'dashicons-list-view', 100);
     }    
 
     function admin_index(){

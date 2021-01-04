@@ -70,7 +70,7 @@ if (! defined( 'ABSPATH') ){
             <div class="row">
                 <label for="hr_search_input_group" class="small_label">Search Headphones</label>
                 <div class="input-group hr_locked" id="hr_search_input_group">
-                    <input type="text" id="hr_search_term" class="form-control" placeholder="Search by Brand, Principle, or Ganre" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
+                    <input type="text" id="hr_search_term" class="form-control" placeholder="Search by Brand, Principle, or Genre" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
                     <button type="button" id="hr_search" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                     <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
                 </div>

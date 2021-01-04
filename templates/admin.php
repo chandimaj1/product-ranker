@@ -35,8 +35,8 @@ if (! defined( 'ABSPATH') ){
             <label for="admin_product_select" class="">Category: </label>
             <select id="admin_product_select">
                 <option value="headphones" selected>Headphones</option>
-                <option value="iem" >IEM</option>
-                <option value="earbuds" >Earbuds</option>
+                <option value="iem" >IEM/Earohones</option>
+                <option value="earbuds" >True Wireless</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -48,6 +48,8 @@ if (! defined( 'ABSPATH') ){
                 </div>
             
             <button id="hr_edit_selected" type="button" class="btn btn-warning hr_locked"><i class="fa fa-edit"></i> Edit</button>
+            <button type="button" id="hrt_er_save" class="btn btn-success hr_locked hr_hidden"><i class="fa fa-check"></i> Save</button>
+                <button type="button" id="hrt_er_cancel" class="btn btn-danger hr_locked hr_hidden"><i class="fa fa-times"></i> Cancel</button>
             <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
         </div>
         <div class="col-md-4">
@@ -129,4 +131,24 @@ if (! defined( 'ABSPATH') ){
 
     <div class="row" id="pagination" current_page='1'>
     </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modal_confirm_delete">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>You are about to delete <span id="delete_records_no">0</span> records from the table.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="confirmed_delete">Delete Records</button>
+        <button type="button" class="btn btn-warning" id="confirmed_delete_cancel" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>

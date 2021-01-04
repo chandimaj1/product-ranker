@@ -38,7 +38,6 @@
 #hranker_table tbody tr:nth-child(odd){
     background-color:#eee;
     padding:5px 2px;
-    height:40px;
 }
 #hranker_table tr td:first-child,
 #hranker_table tr th:first-child{
@@ -112,11 +111,23 @@
     background-color: #fff;
     border-bottom: solid 2px #ccc;
 }
-#hrt_add_new_row, #hrt_edit_row{
+#hrt_add_new_row, .hrt_edit_row{
     display: table-row;
     background-color: #fee;
     height: 70px;
 }
+.hrt_edit_row{
+ background-color:#fee !important;
+ outline: solid 1px #c00;
+    margin-top: 4px !important;
+    height:55px;
+}
+.hrt_edit_row input{
+    font-size: 10pt !important;
+    padding: 1px 1px;
+    margin: 0 0;
+}
+
 #hrt_add_new_row{
     background-color: #efe;
 }

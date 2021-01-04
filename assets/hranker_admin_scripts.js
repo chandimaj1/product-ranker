@@ -356,6 +356,13 @@ function refresh_table(){
 
         $('#pagination').attr( 'current_page' , '1' );
 
+        $('#hrt_er_save, #hrt_er_cancel')
+        .addClass('hr_locked')
+        .addClass('hr_hidden');
+        $('#hr_edit_selected, #hr_delete_selected')
+            .removeClass('hr_locked')
+            .removeClass('hr_hidden');
+
         get_table_results();
 }
 
@@ -369,17 +376,15 @@ function refresh_table(){
  * Listen for row select
  */
 function hr_table_rowselect(){
-    $('#hranker_table td.hrt_select input').unbind('change').change(function(){
+    $('#hranker_table td.hrt_select input').off('change').on('change',function(){
         $('#hranker_table td.hrt_select input').parent().parent().removeClass('selected_row');
         $('#hranker_table td.hrt_select input:checked').parent().parent().addClass('selected_row');
 
         $('#hr_delete_selected').addClass('hr_locked');
         $('#hr_edit_selected').addClass('hr_locked');
 
-        if($('#hranker_table td.hrt_select input:checked').length == 1){
-            $('#hr_delete_selected').removeClass('hr_locked');
+       if($('#hranker_table td.hrt_select input:checked').length >= 1){
             $('#hr_edit_selected').removeClass('hr_locked');
-        }else if($('#hranker_table td.hrt_select input:checked').length > 1){
             $('#hr_delete_selected').removeClass('hr_locked');
         }
         //If all checked
@@ -410,7 +415,7 @@ function hr_table_rowselect(){
  * Listen for Delete row
  */
 function hr_delete_selected_rows(){
-    $('#hr_delete_selected').unbind('click').click(function(){
+    $('#hr_delete_selected').off('click').on('click',function(){
         hr_status('secondary','Deleting rows...');
 
         let selected_ids = [];
@@ -419,7 +424,17 @@ function hr_delete_selected_rows(){
         });
 
         if(selected_ids.length>0){
-            delete_ids_from_database(selected_ids);
+            $('#delete_records_no').html(selected_ids.length);
+            $('#modal_confirm_delete').modal('show');
+            $('#confirmed_delete').off('click').on('click',function(){
+                delete_ids_from_database(selected_ids);
+                $('#modal_confirm_delete').modal('hide');
+            });
+            $('#confirmed_delete_cancel').off('click').on('click',function(){
+                $('#modal_confirm_delete').modal('hide');
+                hr_status('danger','0 Records deleted !');
+            });
+            
         }else{
             hr_status('danger','No selected rows to delete...');
         }
@@ -479,37 +494,10 @@ function delete_ids_from_database(selected_ids){
  * Edit Records
  */
 function hr_edit_selected_row(){
-    $('#hr_edit_selected').unbind('click').click(function(){
+    $('#hr_edit_selected').off('click').on('click',function(){
         hr_status('secondary','Edit record...');
-
-        const selected_row = $('#hranker_table tbody .selected_row').eq(0);
-        let edit_selected_row_template =
-        `<tr id="hrt_edit_row" edit_row_id="`+selected_row.attr('id')+`">
-            <td></td>
-            <td><input id="hrt_er_rank" class="form-control" type="text" value="`+selected_row.children('.hrt_rank').text()+`"></td>
-            <td><input id="hrt_er_device" class="form-control" type="text" value="`+selected_row.children('.hrt_device').text()+`"></td>
-            <td><input id="hrt_er_price" class="form-control" type="number" placeholder="$" value="`+selected_row.children('.hrt_price').text()+`"></td>
-            <td><input id="hrt_er_value" class="form-control" type="number" value="`+selected_row.children('.hrt_value').text()+`"></td>
-            <td><input id="hrt_er_principle" class="form-control" type="text" value="`+selected_row.children('.hrt_principle').text()+`"></td>
-            <td><input id="hrt_er_overall_timbre" class="form-control" type="text" value="`+selected_row.children('.hrt_overall_timbre').text()+`"></td>
-            <td><input id="hrt_er_summary" class="form-control" type="text" value="`+selected_row.children('.hrt_summary').text()+`"></td>
-            <td><input id="hrt_er_ganre_focus" class="form-control" type="text" value="`+selected_row.children('.hrt_ganre_focus').text()+`"></td>
-        <tr>
-        <tr id="hrt_edit_controls">
-            <td colspan="10" class="text-right">
-                <button type="button" id="hrt_er_save" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
-                <button type="button" id="hrt_er_cancel" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
-            </td>
-        </tr>`;
-
-        //Formatting template for each device type
-        const device_type = $('#admin_product_select').val();
         
-        if(device_type=="headphones"){
-            //Do nothinge
-        }else if(device_type=="iem"){
-            edit_selected_row_template = edit_selected_row_template.replace('<td><input id="hrt_er_principle" class="form-control" type="text" value="'+selected_row.children('.hrt_principle').text()+'"></td>','');
-        }
+        $('.hrt_edit_row').remove();
 
         //Remove add new element row
         if ($('#hrt_add_new_row').length>0){
@@ -519,24 +507,69 @@ function hr_edit_selected_row(){
             $('#hrt_anr_controls').remove();
         }
 
-        //Remove Edit row
-        if ($('#hrt_edit_row').length>0){
-            $('#hrt_edit_row').remove();
-        }
-        if ($('#hrt_edit_controls').length>0){
-            $('#hrt_edit_controls').remove();
-        }
+        $('tr.selected_row').each(function(){
+            const selected_row = $(this);
+            let edit_selected_row_template = edit_a_row(selected_row);
+            $(edit_selected_row_template).insertAfter(selected_row);
+            $(selected_row).remove();
+        });
 
-        $('#hranker_table tbody').prepend(edit_selected_row_template);
-        //Refresh event listners
-        $('#hrt_er_save').unbind('click').bind('click',save_edited_row);
-        $('#hrt_er_cancel').unbind('click').bind('click',cancel_edit_row);
         //Remove UI lock
         $('#hranker_table tbody').removeClass('hr_locked');
 
+        //Activate save and cancel buttons
+        $('#hrt_er_save, #hrt_er_cancel')
+            .removeClass('hr_locked')
+            .removeClass('hr_hidden');
+        $('#hr_edit_selected, #hr_delete_selected')
+            .addClass('hr_locked')
+            .addClass('hr_hidden');
+        //Refresh event listners
+        $('#hrt_er_save').off('click').on('click',save_edited_row);
+        $('#hrt_er_cancel').off('click').on('click',cancel_edit_row);
     });
 }
 
+function edit_a_row(selected_row){
+
+     //Formatting template for each device type
+     const device_type = $('#admin_product_select').val();
+        
+     let principle_td = `<td><input id="hrt_er_principle" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_principle').html() )+`"></td>`;
+     
+     if(device_type=="headphones"){
+     }else if(device_type=="iem"){
+         principle_td ='';
+     }
+
+
+    let edit_selected_row_template =
+        `<tr class="hrt_edit_row" edit_row_id="`+selected_row.attr('id')+`">
+            <td></td>
+            <td><input id="hrt_er_rank" class="form-control" type="text" value="`+selected_row.children('.hrt_rank').text()+`"></td>
+            <td><input id="hrt_er_device" class="form-control" type="text" value="`+selected_row.children('.hrt_device').text()+`"></td>
+            <td><input id="hrt_er_price" class="form-control" type="number" placeholder="$" value="`+selected_row.children('.hrt_price').text()+`"></td>
+            <td><input id="hrt_er_value" class="form-control" type="number" value="`+selected_row.children('.hrt_value').text()+`"></td>
+            `+principle_td+`
+            <td><input id="hrt_er_overall_timbre" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_overall_timbre').html() )+`"></td>
+            <td><input id="hrt_er_summary" class="form-control" type="text" value="`+selected_row.children('.hrt_summary').text()+`"></td>
+            <td><input id="hrt_er_ganre_focus" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_ganre_focus').html() )+`"></td>
+        <tr>
+       `;
+
+       
+
+        return edit_selected_row_template;
+}
+
+//Re format in span values to comma seperated values for editing
+ function edit_row_seperate_fields(field){
+     field = field.replaceAll('</span><span>',', ');
+     field = field.replaceAll('<span>','');
+     field = field.replaceAll('</span>','');
+
+     return (field);
+ }
 /**
  * 
  *  Save edited row
@@ -547,51 +580,50 @@ function save_edited_row(){
     $('#hranker_table tbody').addClass('hr_locked');
     hr_status('secondary','Saving edited row in database...');
 
-    let ajax_data = {};
+    let values = [];
+    
     //DEVICE SPECIFIC VALUES PASSED
     const device_type = $('#admin_product_select').val();
-    
-    //Headphones
-    if(device_type=="headphones"){
-        ajax_data = {
-            "table":$('#admin_product_select').val(),
-            "id":$('#hrt_edit_row').attr('edit_row_id'),
-            "rank" :$('#hrt_er_rank').val(),
-            "device" :$('#hrt_er_device').val(),
-            "price" :$('#hrt_er_price').val(),
-            "principle" :$('#hrt_er_principle').val(),
-            "value" :$('#hrt_er_value').val(),
-            "overall_timbre" :$('#hrt_er_overall_timbre').val(),
-            "summary" :$('#hrt_er_summary').val(),
-            "ganre_focus" :$('#hrt_er_ganre_focus').val()
-        }
-    //iem
-    }else if(device_type=="iem"){
-        ajax_data = {
-            "table":$('#admin_product_select').val(),
-            "id":$('#hrt_edit_row').attr('edit_row_id'),
-            "rank" :$('#hrt_er_rank').val(),
-            "device" :$('#hrt_er_device').val(),
-            "price" :$('#hrt_er_price').val(),
-            "value" :$('#hrt_er_value').val(),
-            "overall_timbre" :$('#hrt_er_overall_timbre').val(),
-            "summary" :$('#hrt_er_summary').val(),
-            "ganre_focus" :$('#hrt_er_ganre_focus').val()
-        }
-    }
-    
 
-    //Validation
-    let all_filled = true;
-    
-    for(key in ajax_data){
-        let term = ajax_data[key];
-        console.log(term);
-        if(term=='' || typeof term == 'undefinded'){
-            all_filled = false;
+    //Headphones
+    $('.hrt_edit_row').each(function(){
+        let values_data = {};
+        if(device_type=="headphones"){
+            values_data = {
+                "table":$('#admin_product_select').val(),
+                "id":$(this).attr('edit_row_id'),
+                "rank" :$(this).find('#hrt_er_rank').val(),
+                "device" :$(this).find('#hrt_er_device').val(),
+                "price" :$(this).find('#hrt_er_price').val(),
+                "principle" :$(this).find('#hrt_er_principle').val(),
+                "value" :$(this).find('#hrt_er_value').val(),
+                "overall_timbre" :$(this).find('#hrt_er_overall_timbre').val(),
+                "summary" :$(this).find('#hrt_er_summary').val(),
+                "ganre_focus" :$(this).find('#hrt_er_ganre_focus').val()
+            }
+        //iem
+        }else if(device_type=="iem"){
+            values_data = {
+                "table":$('#admin_product_select').val(),
+                "id":$(this).attr('edit_row_id'),
+                "rank" :$(this).find('#hrt_er_rank').val(),
+                "device" :$(this).find('#hrt_er_device').val(),
+                "price" :$(this).find('#hrt_er_price').val(),
+                "value" :$(this).find('#hrt_er_value').val(),
+                "overall_timbre" :$(this).find('#hrt_er_overall_timbre').val(),
+                "summary" :$(this).find('#hrt_er_summary').val(),
+                "ganre_focus" :$(this).find('#hrt_er_ganre_focus').val()
+            }
         }
-    }
+        
+        values.push(values_data);
+    });
     
+    let ajax_data = {
+        data:values
+    };
+
+    let all_filled = true;
     if (all_filled){
         $.ajax({     
             type: "POST",
@@ -603,10 +635,37 @@ function save_edited_row(){
             {   
                 console.log(data);
                 data = JSON.parse(data);
-                if (data=="success"){
-                    console.log("Settings saved successfully...");
-                    hr_status('success','Settings saved !...');
+                
+                let no_rows = 0;
+                let no_success_rows = 0;
+                
+                for (let i in data) {
+                    console.log(i, data[i]);
+
+                    no_rows++;
+                    if (data[i].msg == "success"){
+                        $('tr[edit_row_id='+data[i].rowid+']').removeClass('hrt_edit_row').addClass('hrt_saved_row');
+                        no_success_rows++
+                    }
+                }
+
+                console.log("no_success_rows: "+no_success_rows);
+                console.log("no_rows: "+no_rows);
+
+                if ( no_success_rows == no_rows ){
+                    console.log("All "+no_rows+" edits saved successfully...");
+                    hr_status('success','All  '+no_rows+' edits saved !...');
+                    $('#hrt_er_save, #hrt_er_cancel')
+                    .addClass('hr_locked')
+                    .addClass('hr_hidden');
+                    $('#hr_edit_selected, #hr_delete_selected')
+                        .removeClass('hr_locked')
+                        .removeClass('hr_hidden');
                     get_table_results();
+                }else if( no_success_rows>0 ){
+                    console.log("Only "+no_success_rows+ " of "+no_rows+" Saved Successfully");
+                    hr_status('success',"Only "+no_success_rows+ " of "+no_rows+" Saved");
+                    //get_table_results();
                 }else{
                     console.log("Error... ");
                     console.log(data);
@@ -639,8 +698,7 @@ function save_edited_row(){
  *  Cancel Edited Row
  */
 function cancel_edit_row(){
-    $('#hrt_edit_row').remove();
-    $('#hrt_edit_controls').remove();
+    refresh_table();
 }
 
 

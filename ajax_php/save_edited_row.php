@@ -6,27 +6,25 @@ if (!isset($wpdb)){
     die();
 }
 
-//var_dump($_POST);
-
-function save_settings_table(){
+function save_settings_table($row){
     global $wpdb;
     $msg = 'Error! Unknown';
 
-    if( isset($_POST['table']) && isset($_POST['id'])  && isset($_POST['device']) && isset($_POST['price']) && isset($_POST['rank'])){
-        $table_name = $wpdb->prefix."hranker_".$_POST['table'];
+    if( isset($row['table']) && isset($row['id'])  && isset($row['device']) && isset($row['price']) && isset($row['rank'])){
+        $table_name = $wpdb->prefix."hranker_".$row['table'];
 
         //Headphones
-        if($_POST['table']=="headphones"){
+        if($row['table']=="headphones"){
             $data = array(
-                'id' => (int)$_POST['id'], 
-                'rank' => $_POST['rank'], 
-                'device' => $_POST['device'],
-                'price' => $_POST['price'],
-                'value'=> $_POST['value'],
-                'principle'=> $_POST['principle'],
-                'overall_timbre'=> $_POST['overall_timbre'],
-                'summary'=> $_POST['summary'],
-                'ganre_focus'=> $_POST['ganre_focus'],
+                'id' => (int)$row['id'], 
+                'rank' => $row['rank'], 
+                'device' => $row['device'],
+                'price' => $row['price'],
+                'value'=> $row['value'],
+                'principle'=> $row['principle'],
+                'overall_timbre'=> $row['overall_timbre'],
+                'summary'=> $row['summary'],
+                'ganre_focus'=> $row['ganre_focus'],
             );
             $data_definitions = array (
                 '%d',
@@ -41,17 +39,17 @@ function save_settings_table(){
             );
 
         //IEM
-        }else if($_POST['table']=="iem"){
+        }else if($row['table']=="iem"){
             $data = array(
-                'id' => (int)$_POST['id'], 
-                'rank' => $_POST['rank'], 
-                'device' => $_POST['device'],
-                'price' => $_POST['price'],
-                'value'=> $_POST['value'],
-                //'principle'=> $_POST['principle'],
-                'overall_timbre'=> $_POST['overall_timbre'],
-                'summary'=> $_POST['summary'],
-                'ganre_focus'=> $_POST['ganre_focus'],
+                'id' => (int)$row['id'], 
+                'rank' => $row['rank'], 
+                'device' => $row['device'],
+                'price' => $row['price'],
+                'value'=> $row['value'],
+                //'principle'=> $row['principle'],
+                'overall_timbre'=> $row['overall_timbre'],
+                'summary'=> $row['summary'],
+                'ganre_focus'=> $row['ganre_focus'],
             );
             $data_definitions = array (
                 '%d',
@@ -75,10 +73,24 @@ function save_settings_table(){
     }else{
         $msg = 'Missing data sent to server !';
     }
-    $msg = json_encode($msg);
-    return ($msg);
+
+    $return = array("rowid"=>$row['id'], "msg"=>$msg);
+    return ($return);
 }
-$msg = save_settings_table();
-echo($msg);
+
+
+
+// Save all edited rows
+$edit_rows = $_POST["data"];
+//var_dump($edit_rows[0]);
+$row_results = array();
+$i=1;
+foreach ( $edit_rows as $row){
+    $row_results[$i] = save_settings_table($row);
+    $i++;
+};
+
+$return = json_encode($row_results);
+echo($return);
 
 ?> 
