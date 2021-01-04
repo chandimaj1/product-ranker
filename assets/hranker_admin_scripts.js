@@ -339,6 +339,7 @@ function hr_category_change(){
             $('#hr_device_name').text('Earbud');
         }
         refresh_table();
+        fetch_frontend_html();
     });
 }
 /***
@@ -535,9 +536,10 @@ function edit_a_row(selected_row){
      //Formatting template for each device type
      const device_type = $('#admin_product_select').val();
         
-     let principle_td = `<td><input id="hrt_er_principle" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_principle').html() )+`"></td>`;
+     let principle_td = '';
      
      if(device_type=="headphones"){
+        principle_td = `<td><input id="hrt_er_principle" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_principle').html() )+`"></td>`;
      }else if(device_type=="iem"){
          principle_td ='';
      }
@@ -928,13 +930,11 @@ function set_filters(filters, selected_filters){
     $('#hr_price_from').val( parseInt(selected_filters.from) );
     $('#hr_price_to').val( parseInt(selected_filters.to) );
  
-    $('#filter_brand, #filter_principle, #filter_genre').unbind('change').change(function(){
-       // if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
+    $('#filter_brand, #filter_principle, #filter_genre').off('change').on('change',function(){
             get_table_results();
-       // }
     });
 
-    $('#hr_price_from, #hr_price_to').unbind('change').change(function(){
+    $('#hr_price_from, #hr_price_to').off('change').on('change',function(){
         if( $('#hr_price_from').val() >=0 && $('#hr_price_to').val() >0 && $('#hr_price_to').val()>$('#hr_price_from').val() ){
             get_table_results();
         }
@@ -954,7 +954,7 @@ function set_filters(filters, selected_filters){
  *  Listen for sort
  */
 function hr_listen_sort(){
-    $('.hr_sort').click(function(){
+    $('.hr_sort').on('click',function(){
         if ($(this).hasClass('hr_sort_desc')){
             $('.hr_sort').removeClass('hr_sort_desc');
             $('.hr_sort').removeClass('hr_sort_asc');
@@ -1006,7 +1006,7 @@ function get_sort_status(req){
  *  HR Search
  */
 function hr_search(){
-    $('#hr_search').click(function(){
+    $('#hr_search').on('click',function(){
         $('#hranker_table thead').addClass('hr_locked');
         $('#hranker_table tbody').addClass('hr_locked');
         $('#hr_edit_selected').addClass('hr_locked');
@@ -1062,6 +1062,99 @@ function cancel_search(){
 
 
 
+
+
+
+/***
+ * 
+ * 
+ * 
+ * Fetch Front End HTML
+ */
+function fetch_frontend_html(){
+    const table = $('#admin_product_select').val();
+    $.ajax({     
+        type: "POST",
+        crossDomain: true,
+        url:ajax_url+'fetch_frontend_html.php',
+        data :{
+            table:table,
+        },
+
+        success: function(data)
+        {   
+           
+            try {
+                data = JSON.parse(data);
+              }
+              catch (e) {
+                console.log("error: "+e);
+              };
+
+            if (data.msg=="success"){
+                console.log(data);
+               console.log("fetch success...");
+               $('#frontend_html').html(data.result);
+               $('#hr_category_html').off('click').on('click',function(){
+                    update_frontend_html();
+               });
+            }else{
+                console.log("Error... ");
+                console.log(data);
+            }
+        },
+
+        error: function(e)
+        {
+            console.log(e);
+        }
+    });
+}
+
+    function update_frontend_html(){
+        let table = $('#admin_product_select').val();
+        let html = $('#frontend_html').val();
+
+        hr_status('secondary','Updating HTML...');
+
+        $.ajax({     
+            type: "POST",
+            crossDomain: true,
+            url:ajax_url+'update_frontend_html.php',
+            data :{
+                table:table,
+                html: html,
+            },
+
+            success: function(data)
+            {   
+                console.log(data);
+                try {
+                    data = JSON.parse(data);
+                }
+                catch (e) {
+                    console.log("error: "+e);
+                };
+
+                if (data=="success"){
+                    console.log(data);
+                    console.log("Update success...");
+                    hr_status('success','FrontEnd HTML updated.');
+                    fetch_frontend_html();
+                }else{
+                    console.log("Error... ");
+                    console.log(data);
+                }
+            },
+
+            error: function(e)
+            {
+                console.log(e);
+            }
+        });
+    }
+
+
 /**
  * 
  * 
@@ -1097,6 +1190,8 @@ $(document).ready(function() {
 
      //Select 2
      //$("#filter_principle, #filter_genre").select2();
+
+     fetch_frontend_html();
  }
    
 })

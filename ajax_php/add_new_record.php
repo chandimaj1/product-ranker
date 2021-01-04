@@ -8,7 +8,7 @@ if (!isset($wpdb)){
 
 //var_dump($_POST);
 
-function save_settings_table(){
+function save_table(){
     global $wpdb;
     $msg = 'Error! Unknown';
 
@@ -74,7 +74,7 @@ function save_settings_table(){
     $msg = json_encode($msg);
     return ($msg);
 }
-$msg = save_settings_table();
+$msg = save_table();
 echo($msg);
 
 ?> 

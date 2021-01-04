@@ -164,6 +164,23 @@ class headphoneRanker
             dbDelta($sql);
             add_option("headphoneranker_db_version", "1.2");
         }
+
+        // settings
+        $table_name = $wpdb->prefix."hranker_settings";
+        if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
+            $sql = 'CREATE TABLE '.$table_name.'(
+            id INTEGER NOT NULL AUTO_INCREMENT,
+            headphones_html TEXT,
+            iem_html TEXT,
+            earbuds_html TEXT,
+            PRIMARY KEY  (id))';
+            $sql_insert = "INSERT INTO $table_name
+            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -')";
+            require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+            dbDelta($sql_insert);
+            add_option("headphoneranker_db_version", "1.3");
+        }
     }
     
     //Enqueue on admin pages
@@ -199,7 +216,7 @@ class headphoneRanker
          wp_enqueue_script( 'bootstrap4_scripts', plugins_url('/assets/bootstrap4/bootstrap_4_5_2_min.js',__FILE__), array('jquery','headphoneranker_popper_scripts'));
          //Font-Awesome
          wp_enqueue_style( 'fontawesome_css', plugins_url('/assets/font_awesome/css/font-awesome.css',__FILE__),90);
-         //Admin scripts and styles
+         //FrontEnd scripts and styles
          wp_enqueue_style( 'headphoneranker_styles', plugins_url('/assets/hranker_style.css',__FILE__),99);
          wp_enqueue_script( 'headphoneranker_script', plugins_url('/assets/hranker_scripts.js',__FILE__), array('jquery'));
          //Select2
@@ -207,6 +224,8 @@ class headphoneRanker
          wp_enqueue_script( 'headphoneranker_select2_scripts', plugins_url('/assets/select2/select2.full.js',__FILE__), array('jquery'));
           //Popper
         wp_enqueue_script( 'headphoneranker_popper_scripts', plugins_url('/assets/popper/popper.min.js',__FILE__), array('jquery'));
+        //Sharer
+        wp_enqueue_script( 'headphoneranker_sharer_scripts', plugins_url('/assets/sharer/sharer.min.js',__FILE__), array('jquery'));
         }
     }
 

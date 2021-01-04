@@ -21,25 +21,29 @@ if (! defined( 'ABSPATH') ){
 
 <div class="container" id="admin-container">
     <div class="row" style="margin-top:10px !important;">
-            <h5 id="admin-title">HRanker Product Manager</h5>
-        
+            <h5 id="admin-title">Headphone Ranker Plugin</h5>
             <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
             <div id="hr_message" class="text-right">Retrieving ...</div>
-
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12"><h6>Front Section HTML:</h6></div>
+        <div class="col-sm-4 text-right">
+            <div style="font-size:10pt" class="text-left">
+                Front page custom section HTML for the selected category:
+            </div>
+            <button id="hr_category_html" type="button" class="btn btn-success"><i class="fa fa-check"></i> Update</button>
+        </div>
+        <div class="col-sm-8">
+            <textarea class="form-control" id="frontend_html"></textarea>
+        </div>
     </div>
 
     <hr />
 
     <div class="row">
-        <div class="col-md-4">
-            <label for="admin_product_select" class="">Category: </label>
-            <select id="admin_product_select">
-                <option value="headphones" selected>Headphones</option>
-                <option value="iem" >IEM/Earohones</option>
-                <option value="earbuds" >True Wireless</option>
-            </select>
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
+            <div class=""><h6>Data Table Management:</h6></div>
             <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
             <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
                 <div class="custom-file" style="display:none">
@@ -52,13 +56,27 @@ if (! defined( 'ABSPATH') ){
                 <button type="button" id="hrt_er_cancel" class="btn btn-danger hr_locked hr_hidden"><i class="fa fa-times"></i> Cancel</button>
             <button id="hr_delete_selected" type="button" class="btn btn-danger hr_locked"><i class="fa fa-trash"></i> Delete</button>
         </div>
+        <div class="col-md-3">
+            <div class=""><h6>Select Category (Table):</h6></div>
+            <select id="admin_product_select" class="form-control">
+                <option value="headphones" selected>Headphones</option>
+                <option value="iem" >IEM/Earphones</option>
+                <option value="earbuds" >True Wireless</option>
+            </select>
+        </div>
         <div class="col-md-4">
+            <div class=""><h6>Search Table:</h6></div>
             <div class="input-group hr_locked" id="hr_search_input_group">
                 <input type="text" id="hr_search_term" class="form-control" placeholder="Search Table" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
                 <button type="button" id="hr_search" class="btn btn-info"><i class="fa fa-search"></i></button>
                 <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i></button>
             </div>
         </div>
+    </div>
+
+    <hr>
+    <div class="row">
+        <div class="col-sm-12"><h6>Table Results:</h6></div>
     </div>
 
     <div class="row" id="filters_row">
@@ -133,11 +151,11 @@ if (! defined( 'ABSPATH') ){
     </div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="modal_confirm_delete">
+<div class="modal" tabindex="-1" role="dialog" id="modal_confirm_delete" style="margin-top:50px;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"></h5>
+        <h5 class="modal-title">Confirm Delete</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

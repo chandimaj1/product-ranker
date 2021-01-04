@@ -6,9 +6,6 @@
 }
 
 
-#admin-title{
-    
-}
 #admin-container .btn,#admin-container input, #hranker_table .btn, #csv_upload_section{
     font-size:10pt;
 }
@@ -327,7 +324,7 @@ tr.selected_row{
     text-align: center;
     color: #666;
     line-height: 21px;
-    float: left;
+    float:left;
     cursor: pointer;
     transition: all .4s;
 }
@@ -337,10 +334,13 @@ tr.selected_row{
 .page-nav .current {
     background-color: #4db2ec;
     color: #fff;
-    border-color: #4db2ec;
+    border-color: #4db2ec; 
 }
 #pagination_info{
     text-align:right;
     border: none;
 }
 
+#frontend_html_placeholder{
+    padding:25px !important;
+}

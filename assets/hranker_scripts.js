@@ -1002,8 +1002,159 @@
             refresh_table();
         });
     }
+
+
+
+    /***
+ * 
+ * 
+ * 
+ * Fetch Front End HTML
+ */
+function fetch_frontend_html(){
+    const table = $('#admin_product_select').val();
+    $.ajax({     
+        type: "POST",
+        crossDomain: true,
+        url:ajax_url+'fetch_frontend_html.php',
+        data :{
+            table:table,
+        },
+
+        success: function(data)
+        {   
+           
+            try {
+                data = JSON.parse(data);
+              }
+              catch (e) {
+                console.log("error: "+e);
+              };
+
+            if (data.msg=="success"){
+                console.log(data);
+               console.log("fetch success...");
+               $('#frontend_html_placeholder').html(data.result);
+            }else{
+                console.log("Error... ");
+                console.log(data);
+            }
+        },
+
+        error: function(e)
+        {
+            console.log(e);
+        }
+    });
+}
     
-    
+   
+
+
+/**
+ * 
+ * 
+ * 
+ * SOCIAL SHARE HANDLING
+ */
+function handle_social_share(){
+    console.log('Initializing SocialShare...');
+    $('#social_sharer button').each(function(){
+        let btn = $(this).attr('id');
+        btn = btn.replace('ss_','');
+
+        let title = "Headphone Ranker by Major HiFi";
+        let url = window.location.href; 
+        
+        $(this).attr('data-sharer',btn);
+
+        switch(btn){
+            case 'twitter':{
+                $(this).attr('data-title',title);
+                $(this).attr('data-url',url);
+            }
+            break;
+
+            case 'facebook':{
+                $(this).attr('data-url',url);
+            }
+            break;
+
+            case 'reddit':{
+                $(this).attr('data-url',url);
+            }
+            break;
+
+            case 'linkedin':{
+                $(this).attr('data-url',url);
+            }
+            break;
+
+            case 'whatsapp':{
+                $(this).attr('data-title',title);
+                $(this).attr('data-url',url);
+            }
+            break;
+
+            case 'email':{
+                $(this).attr('data-title',title);
+                $(this).attr('data-url',url);
+                $(this).attr('data-subject','Checkout this awesome ranking tool!');
+            }
+            break;
+
+            case 'bookmark':{
+                $(this).off('click').on('click', function (e) {
+                    var bookmarkTitle = title;
+                    var bookmarkUrl = url;
+                
+                    if ('addToHomescreen' in window && addToHomescreen.isCompatible) {
+                      // Mobile browsers
+                      addToHomescreen({ autostart: false, startDelay: 0 }).show(true);
+                    } else if (/CriOS\//.test(navigator.userAgent)) {
+                      // Chrome for iOS
+                      alert('To add to Home Screen, launch this website in Safari, then tap the Share button and select "Add to Home Screen".');
+                    } else if (window.sidebar && window.sidebar.addPanel) {
+                      // Firefox <=22
+                      window.sidebar.addPanel(bookmarkTitle, bookmarkUrl, '');
+                    } else if ((window.sidebar && /Firefox/i.test(navigator.userAgent) && !Object.fromEntries) || (window.opera && window.print)) {
+                      // Firefox 23-62 and Opera <=14
+                      $(this).attr({
+                        href: bookmarkUrl,
+                        title: bookmarkTitle,
+                        rel: 'sidebar'
+                      }).off(e);
+                      return true;
+                    } else if (window.external && ('AddFavorite' in window.external)) {
+                      // IE Favorites
+                      window.external.AddFavorite(bookmarkUrl, bookmarkTitle);
+                    } else {
+                      // Other browsers (Chrome, Safari, Firefox 63+, Opera 15+)
+                      alert('Press ' + (/Mac/i.test(navigator.platform) ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
+                    }
+                
+                    return false;
+                  });
+            }
+            break;
+
+            case 'copylink':{
+                $(this).off('click').on('click', function (e) {
+                    var $temp = $("<input>");
+                    $("body").append($temp);
+                    $temp.val(url).select();
+                    document.execCommand("copy");
+                    $temp.remove();
+                    hr_status('success','Link Copied...');
+                });
+            }
+            break;
+        }
+    });
+
+    window.Sharer.init();
+    console.log('SocialShare Initialized...');
+}
     
     /**
      * 
@@ -1042,6 +1193,13 @@
     
          //Enable Tooltips
          $('[data-toggle="tooltip"]').tooltip();
+
+
+         //Fetch Frontend HTML
+         fetch_frontend_html();
+
+         //Handle Share
+         handle_social_share();
        
     })
     

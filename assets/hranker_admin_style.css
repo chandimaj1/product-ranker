@@ -205,12 +205,12 @@ tr.selected_row{
     width: 100%;
 }
 #filters_row{
-    margin-top:15px;
-    margin-bottom:10px;
+    margin-top:10px;
+    margin-bottom:0px;
     padding: 15px 0;
-    background-color: #eee;
-    border-radius:5px;
-    box-shadow: 0 0 4px 2px #ccc;
+    background-color: #f2f6ff;
+    border-radius:2px;
+    border: solid 1px #eee;
 }
 
 /*

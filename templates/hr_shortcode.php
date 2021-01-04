@@ -29,12 +29,22 @@ if (! defined( 'ABSPATH') ){
     </div>
     <div class="row">
         <div class="col-md-6 p-0" id="filters_row">
+            <div id="social_sharer">
+                <button id="ss_twitter" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share on Twitter"> <i class="fa fa-twitter"></i></button>
+                <button id="ss_facebook" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share on Facebook"> <i class="fa fa-facebook"></i></button>
+                <button id="ss_reddit" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share on Reddit"> <i class="fa fa-reddit"></i></button>
+                <button id="ss_linkedin" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share on LinkedIn"> <i class="fa fa-linkedin"></i></button>
+                <button id="ss_whatsapp" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share on Whatsapp"> <i class="fa fa-whatsapp"></i></button>
+                <button id="ss_email" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Share by Email"> <i class="fa fa-envelope"></i></button>
+                <button id="ss_bookmark" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Bookmark this link"> <i class="fa fa-bookmark"></i></button>
+                <button id="ss_copylink" class="btn btn-secondary social_share_icon" data-toggle="tooltip" data-placement="bottom" title="Copy link to clipboard"> <i class="fa fa-link"></i></button>
+            </div>
             <div class="row" >
                 <div class="col-sm-12">
                     <label for="filter_brand" class="small_label">Filter by Brand</label>
                     <select id="filter_brand">
                         <option value="any" selected>Any</option>
-                    </select>
+                    </select> 
                 </div> 
                 
                 <div class="col-sm-12">
@@ -75,6 +85,9 @@ if (! defined( 'ABSPATH') ){
                     <button type="button" id="hr_search_cancel" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
                 </div>
             </div>
+
+            <hr>
+            <div class="row" id="frontend_html_placeholder"></div> 
         </div>
     </div>
 </div>
