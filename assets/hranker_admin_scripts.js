@@ -40,7 +40,7 @@ function hr_new_entry(){
         
         if(device_type=="headphones"){
             //Do nothinge
-        }else if(device_type=="iem"){
+        }else if( device_type=="iem" || device_type=="earbuds" ){
             hrt_addnewrow_template = hrt_addnewrow_template.replace('<td><input id="hrt_anr_principle" class="form-control" type="text"></td>','');
         }
 
@@ -106,7 +106,7 @@ function save_new_row(){
             "ganre_focus" :$('#hrt_anr_ganre_focus').val()
         }
     //iem
-    }else if(device_type=="iem"){
+    }else if( device_type=="iem" || device_type=="earbuds" ){
         ajax_data = {
             "table":$('#admin_product_select').val(),
             "rank" :$('#hrt_anr_rank').val(),
@@ -328,15 +328,16 @@ function hr_category_change(){
         $('#hranker_table').attr('hr_showing',hr_showing);
 
         if(hr_showing=="headphones"){
-            $('#hr_device_name').text('Headphone');
-            $('#hr_search_term').attr('data-original-title','Search by headphone, principle or genre');
+            //$('#hr_device_name').text('Device');
+            $('#hr_search_term').attr('data-original-title','Search by Model, Principle or Genre');
 
         }else if(hr_showing=="iem"){
-            $('#hr_device_name').text('IEM');
-            $('#hr_search_term').attr('data-original-title','Search by IEM or genre');
+            //$('#hr_device_name').text('Device');
+            $('#hr_search_term').attr('data-original-title','Search by Device or genre');
 
         }else if(hr_showing=="earbuds"){
-            $('#hr_device_name').text('Earbud');
+            //$('#hr_device_name').text('Device');
+            $('#hr_search_term').attr('data-original-title','Search by Device or genre');
         }
         refresh_table();
         fetch_frontend_html();
@@ -540,7 +541,7 @@ function edit_a_row(selected_row){
      
      if(device_type=="headphones"){
         principle_td = `<td><input id="hrt_er_principle" class="form-control" type="text" value="`+edit_row_seperate_fields( selected_row.children('.hrt_principle').html() )+`"></td>`;
-     }else if(device_type=="iem"){
+     }else if( device_type=="iem" || device_type=="earbuds" ){
          principle_td ='';
      }
 
@@ -603,8 +604,8 @@ function save_edited_row(){
                 "summary" :$(this).find('#hrt_er_summary').val(),
                 "ganre_focus" :$(this).find('#hrt_er_ganre_focus').val()
             }
-        //iem
-        }else if(device_type=="iem"){
+        //iem or earbuds
+        }else if( device_type=="iem" || device_type=="earbuds" ){
             values_data = {
                 "table":$('#admin_product_select').val(),
                 "id":$(this).attr('edit_row_id'),
@@ -808,7 +809,7 @@ function add_data_to_table(data){
         let row_principle = '';
         if(device_type=="headphones"){
             row_principle =  `<td class="hrt_principle">`+format_comma_seperated_text(item.principle)+`</td>`;
-        }else if(device_type=="iem"){
+        }else if( device_type=="iem" || device_type=="earbuds" ){
             row_principle = '';
         }
 

@@ -1,7 +1,8 @@
 /*
     Remove column titles on device change
 **/
-[hr_showing="iem"] .hrt_principle{
+[hr_showing="iem"] .hrt_principle,
+[hr_showing="earbuds"] .hrt_principle{
     display: none !important;
 }
 

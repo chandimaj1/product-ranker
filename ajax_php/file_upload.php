@@ -56,7 +56,7 @@ function save_csv_in_table($target_file){
                 $summary = trim($csvData[6]);
                 $ganre_focus = trim($csvData[7]);
 
-            }else if($_POST['table']=="iem"){
+            }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
                 // Skip row if length != 7
                 if( !($dataLen == 7) ) continue;
                 
@@ -93,7 +93,7 @@ function save_csv_in_table($target_file){
                     'summary' => $summary,
                     'ganre_focus' => $ganre_focus
                     ));
-                }else if($_POST['table']=="iem"){
+                }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
                     $wpdb->insert($tablename, array(
                         'rank' =>$rank,
                         'device' =>$device,

@@ -46,14 +46,16 @@ if (! defined( 'ABSPATH') ){
                         <option value="any" selected>Any</option>
                     </select> 
                 </div> 
-                
-                <div class="col-sm-12">
+<?php 
+    //if ( $atts["device"]=="headphones" ){}
+?>   
+                <div class="col-sm-12" id="frontend_filter_by_principle">
                     <label for="filter_brand" class="small_label">Filter by Principle</label>
                     <select id="filter_principle">
                         <option value="any" selected>Any</option>
                     </select>
-                    </div> 
-                
+                </div> 
+
                 <div class="col-sm-12">
                     <label for="filter_genre" class="small_label">Filter by Genre</label>
                     <select id="filter_genre"> 
@@ -105,13 +107,13 @@ if (! defined( 'ABSPATH') ){
                         Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div>
                     </th>
                     <th class="hrt_device" width="13%" data-toggle="tooltip" data-placement="top" title="Brand and Model">
-                        <span id="hr_device_name">Headphone</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                        <span id="hr_device_name">Device</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_price" width="8%" data-toggle="tooltip" data-placement="top" title="Original Cost">
                         Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Worth of headphone compared to price">
                         Value<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <?php 
-                        if ($atts["device"]!="iem"){
+                        if ( $atts["device"]=="headphones" ){
                     ?>
                             <th class="hrt_principle" data-toggle="tooltip" data-placement="top" title="Driver type and earcup design">
                         Principle<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>

@@ -38,8 +38,8 @@ function save_settings_table($row){
                 '%s',
             );
 
-        //IEM
-        }else if($row['table']=="iem"){
+        //IEM OR EARBUDS
+        }else if( $row['table']=="iem" || $row['table']=="earbuds" ){
             $data = array(
                 'id' => (int)$row['id'], 
                 'rank' => $row['rank'], 

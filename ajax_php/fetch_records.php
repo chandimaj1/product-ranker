@@ -53,7 +53,7 @@ function fetch_paginated_result_ids(){
 
         //-- Principle
         if ( $filter_brand ){
-            $and = " AND";
+            $and = " AND"; 
         }else{
             $and = "";
         }
@@ -65,7 +65,7 @@ function fetch_paginated_result_ids(){
         }
 
         //-- Genre
-        if ( $filter_principle ){
+        if ( $filter_principle || $filter_brand ){
             $and = " AND";
         }else{
             $and = "";
@@ -79,7 +79,7 @@ function fetch_paginated_result_ids(){
 
 
         //Price
-        if ( $filter_principle || $filter_genre ){
+        if ( $filter_principle || $filter_genre || $filter_brand ){
             $and = " AND";
         }else{
             $and = "";
@@ -111,7 +111,7 @@ function fetch_paginated_result_ids(){
 
             if( $_POST['table']=="headphones" ){
                 $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
-            }else if( $_POST['table']=="iem" ){
+            }else if ( $_POST['table']=="iem" || $_POST['table']=="earbuds" ){
                 $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
             }
         }else if (  $filter_brand || $filter_principle || $filter_genre || $filter_price  ){
@@ -132,6 +132,10 @@ function fetch_paginated_result_ids(){
     }
 
     $result = array_chunk($result, $array_chunk_size);
+
+    if ( !isset($_POST["filter_principle"]) ){
+        $_POST["filter_principle"] = false;
+    }
 
     $return = array("msg"=>$msg, "paginated_result"=>$result, "sort"=>$sort, "sql"=>$sql, "filters"=>array("brand"=>$_POST["filter_brand"],"principle"=>$_POST["filter_principle"], "genre"=>$_POST["filter_genre"], "from"=>(int)$_POST["filter_price_from"], "to"=>(int)$_POST["filter_price_to"]) );
     return ($return);
@@ -181,6 +185,7 @@ function fetch_results_from_ids($page_ids,$table,$sort){
         }
     }else{
         $msg = 'Missing data sent to server !';
+        $result = 'No Result';
     }
 
     $return = array("msg"=>$msg, "page_data"=>$result);
@@ -360,7 +365,7 @@ function get_filters($table){
             $principle = $wpdb->get_results( "SELECT DISTINCT principle FROM $table_name ORDER BY principle ASC", ARRAY_N);
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
             $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
-        }else if( $table == "iem" ){
+        }else if( $table == "iem" || $table == "earbuds" ){
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
             $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
         }

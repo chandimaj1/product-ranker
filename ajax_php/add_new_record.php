@@ -38,8 +38,8 @@ function save_table(){
                 '%s',
             );
 
-        //IEM
-        }else if($_POST["table"]=="iem"){
+        //IEM OR EARBUDS
+        }else if( $_POST["table"]=="iem" || $_POST["table"]=="earbuds" ){
             $data = array(
                 'rank' => $_POST['rank'], 
                 'device' => $_POST['device'],
