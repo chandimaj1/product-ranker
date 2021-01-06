@@ -59,7 +59,7 @@ function fetch_paginated_result_ids(){
         }
 
         if(  isset($_POST['filter_principle'])  &&  ($_POST['filter_principle'] != "any")  &&  ($_POST['table']=="headphones")   ){
-            $filter_sql = " $and ( principle LIKE BINARY '%".$_POST['filter_principle']."%')";
+            $filter_sql .= " $and ( principle LIKE BINARY '%".$_POST['filter_principle']."%')";
         }else{
             $filter_principle = false;
         }

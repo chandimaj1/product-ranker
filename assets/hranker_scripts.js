@@ -160,7 +160,6 @@
     
             let row = 
             `<tr id="`+item.id+`">
-                <td class="hrt_select"><input type="checkbox" class="form_control"/></td>
                 <td class="hrt_rank">`+item.rank+`</td>
                 <td class="hrt_device">`+item.device+`</td>
                 <td class="hrt_price">`+item.price+`</td>
@@ -580,6 +579,13 @@ function handle_social_share(){
         $("#filter_brand").select2({dropdownPosition: 'below'});
         $("#filter_principle").select2({dropdownPosition: 'below'});
         $("#filter_genre").select2({dropdownPosition: 'below'});
+        
+        $(window).on('resize', function(){
+            //Select 2
+            $("#filter_brand").select2("destroy").select2({dropdownPosition: 'below'});
+            $("#filter_principle").select2("destroy").select2({dropdownPosition: 'below'});
+            $("#filter_genre").select2("destroy").select2({dropdownPosition: 'below'});
+        });
     
      // --- Execute Admin page specific functions   
 
@@ -601,7 +607,9 @@ function handle_social_share(){
          //Handle Share
          handle_social_share();
        
-    })
+    });
+
+   
     
     //--- jQuery No Conflict
     })(jQuery);

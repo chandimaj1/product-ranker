@@ -47,9 +47,13 @@ if (! defined( 'ABSPATH') ){
                     </select> 
                 </div> 
 <?php 
-    //if ( $atts["device"]=="headphones" ){}
+    if ( $atts["device"]=="headphones" ){
+        $display = 'block';
+    }else{
+        $display = 'none';
+    }
 ?>   
-                <div class="col-sm-12" id="frontend_filter_by_principle">
+                <div class="col-sm-12" id="frontend_filter_by_principle" style="display:<?= $display ?>">
                     <label for="filter_brand" class="small_label">Filter by Principle</label>
                     <select id="filter_principle">
                         <option value="any" selected>Any</option>
@@ -95,14 +99,11 @@ if (! defined( 'ABSPATH') ){
 </div>
 
 
-<div class="container">
+<div class="container" id="hr_table_container">
     <div class="row" id="data_table_container">
-        <table id="hranker_table" hr_showing="headphones" class="col-sm-12">
+        <table id="hranker_table" hr_showing="headphones" class="col-sm-12 table-striped">
             <thead class="hr_locked">
                 <tr> 
-                    <th class="hrt_select" width="1%" data-toggle="tooltip" data-placement="top" title="Select All / Deselect All">
-                        <input id="hrt_select_all" type="checkbox">
-                    </th>
                     <th class="hrt_rank" width="6%" data-toggle="tooltip" data-placement="top" title="Ranking: A (Best) to F (Worst)">
                         Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div>
                     </th>
