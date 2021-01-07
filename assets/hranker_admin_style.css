@@ -344,3 +344,8 @@ tr.selected_row{
         display: block !important;
     }
 }
+
+#hr_admin_banner_img{
+    width: 100%;
+    max-width: 800px;
+}

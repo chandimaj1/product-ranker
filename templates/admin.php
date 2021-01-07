@@ -23,6 +23,8 @@ if (! defined( 'ABSPATH') ){
     <div class="row" style="margin-top:10px !important;">
             <h5 id="admin-title">Headphone Ranker Plugin</h5>
     </div>
+
+
     <hr>
     <div class="row">
         <div class="col-sm-12"><h6>Front Section HTML:</h6></div>
@@ -36,8 +38,28 @@ if (! defined( 'ABSPATH') ){
             <textarea class="form-control" id="frontend_html"></textarea>
         </div>
     </div>
-
     <hr />
+
+
+
+    <hr>
+    <div class="row">
+        <div class="col-sm-12"><h6>Sponsor's Banner:</h6></div>
+        <div class="col-sm-6 text-right">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="banner_link_label" style="font-size:10pt;">Link Banner to:</span>
+                <input type="text" class="form-control" placeholder="URL" aria-label="URL" aria-describedby="banner_link_label">
+            </div>
+            <input type="file" class="custom-file-input" id="banner_img_file" style="display:none">
+            <button id="hr_upload_banner_img" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> Banner Image</button>
+            <button id="hr_category_html" type="button" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <div class="col-sm-6">
+            <img id="hr_admin_banner_img" src="<?= $plugin_url ?>assets/img/sponsor_banner_default.jpg"/>
+        </div>
+    </div>
+    <hr />
+
 
     <div class="row">
         <div class="col-md-5">

@@ -42,40 +42,38 @@ function save_csv_in_table($target_file){
 
             if($_POST['table']=="headphones"){
                 // Skip row if length != 8
-                if( !($dataLen == 9) ) continue;
-
-                $rank = trim($csvData[0]);
-                $brand = trim($csvData[1]);
-                $device = trim($csvData[2]);
-                $price = trim($csvData[3]);
-                    $price = str_replace('$','',$price);
-                    $price = (float)$price;
-                $value = trim($csvData[4]);
-                    $value = (int)$value;
-                $principle = trim($csvData[5]);
-                $overall_timbre = trim($csvData[6]);
-                $summary = trim($csvData[7]);
-                $ganre_focus = trim($csvData[8]);
-
-            }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
-                // Skip row if length != 7
                 if( !($dataLen == 8) ) continue;
-                
+
                 $rank = trim($csvData[0]);
-                $brand = trim($csvData[1]);
-                $device = trim($csvData[2]);
-                $price = trim($csvData[3]);
+                $device = trim($csvData[1]);
+                $price = trim($csvData[2]);
                     $price = str_replace('$','',$price);
                     $price = (float)$price;
-                $value = trim($csvData[4]);
+                $value = trim($csvData[3]);
                     $value = (int)$value;
+                $principle = trim($csvData[4]);
                 $overall_timbre = trim($csvData[5]);
                 $summary = trim($csvData[6]);
                 $ganre_focus = trim($csvData[7]);
+
+            }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
+                // Skip row if length != 7
+                if( !($dataLen == 7) ) continue;
+                
+                $rank = trim($csvData[0]);
+                $device = trim($csvData[1]);
+                $price = trim($csvData[2]);
+                    $price = str_replace('$','',$price);
+                    $price = (float)$price;
+                $value = trim($csvData[3]);
+                    $value = (int)$value;
+                $overall_timbre = trim($csvData[4]);
+                $summary = trim($csvData[5]);
+                $ganre_focus = trim($csvData[6]);
             }
     
             // Check record already exists or not
-            $cntSQL = "SELECT count(*) as count FROM {$tablename} WHERE (brand='".$brand."' AND device='".$device."')";
+            $cntSQL = "SELECT count(*) as count FROM {$tablename} WHERE device='".$device."'";
             $record = $wpdb->get_results($cntSQL, OBJECT);
     
             if($record[0]->count==0){
@@ -87,7 +85,6 @@ function save_csv_in_table($target_file){
                 if($_POST['table']=="headphones"){
                     $wpdb->insert($tablename, array(
                     'rank' =>$rank,
-                    'brand' =>$brand,
                     'device' =>$device,
                     'price' =>(float)$price,
                     'value' => $value,
@@ -99,7 +96,6 @@ function save_csv_in_table($target_file){
                 }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
                     $wpdb->insert($tablename, array(
                         'rank' =>$rank,
-                        'brand' =>$brand,
                         'device' =>$device,
                         'price' =>(float)$price,
                         'value' => $value,

@@ -1169,6 +1169,113 @@ function fetch_frontend_html(){
     }
 
 
+
+    /**
+ * 
+ * 
+ * 
+ * 
+ * Upload Banner Img
+ * 
+ */
+function hr_upload_banner_img(){
+    $('#hr_upload_banner_img').click(function(){
+        hr_status('secondary','Select Banner imag & click upload.');
+        $('#banner_img_file').trigger('click');
+
+        $('#banner_img_file').off('change').on('change',function(){
+            if ($.inArray($('#banner_img_file').val().split('.').pop().toLowerCase(), ['jpg', 'png']) == -1) {
+                hr_status('danger','Only jpg and png files are allowed.');
+            }else{
+                do_banner_image_upload();
+            }
+        });
+    });
+}
+
+function do_banner_image_upload(){
+
+    const file = $('#banner_img_file')[0].files[0];
+    /**
+     * 
+     * File Upload Script
+     */
+    let Upload = function (file) {
+        this.file = file;
+    };
+
+    Upload.prototype.getType = function() {
+        return this.file.type;
+    };
+    Upload.prototype.getSize = function() {
+        return this.file.size;
+    };
+    Upload.prototype.getName = function() {
+        return this.file.name;
+    };
+
+    Upload.prototype.doUpload = function (file) {
+
+        var that = this;
+        var formData = new FormData();
+
+        // add assoc key values, this will be posts values
+        formData.append("file", this.file, this.getName());
+        formData.append("upload_file", true);
+        console.log("uploading banner img..");
+
+        $.ajax({
+            
+            type: "POST",
+            url:ajax_url + 'banner_image_upload.php',
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                }
+                return myXhr;
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                console.log("file uploaded...");
+
+                if(data.upload=="success"){
+                    hr_status('success','Banner Image Uploaded.');
+                }
+            },
+            error: function (error) {
+                // handle error
+                console.log("file upload failed...");
+                console.log(error)
+            },
+            async: true,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000
+        });
+    };
+
+    Upload.prototype.progressHandling = function (event) {
+        var percent = 0;
+        var position = event.loaded || event.position;
+        var total = event.total;
+        if (event.lengthComputable) {
+            percent = Math.ceil(position / total * 100);
+        }
+        // update progressbars classes so it fits your code
+        $("#hr_message:before").css("content", percent + "% ");
+    };
+
+    //Initiate file upload
+    var upload = new Upload(file);
+    upload.doUpload(file);
+}
+
+
+
 /**
  * 
  * 
