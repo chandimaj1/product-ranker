@@ -47,21 +47,44 @@ if (! defined( 'ABSPATH') ){
 
 
 
-    <hr>
     <div class="row">
         <div class="col-sm-12"><h6>Sponsor's Banner:</h6></div>
-        <div class="col-sm-6 text-right">
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="banner_link_label" style="font-size:10pt;">Link Banner to:</span>
-                <input id="banner_link_url" type="text" class="form-control" placeholder="URL" aria-label="URL" aria-describedby="banner_link_label">
-            </div>
-            <input type="file" class="custom-file-input" id="banner_img_file" style="display:none">
-            <button id="hr_upload_banner_img" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> Banner Image</button>
-            <button id="hr_save_banner" type="button" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
-        </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12">
+            <!--
             <img id="hr_admin_banner_img" file_name="sponsor_banner_default.jpg" src="<?= $plugin_url ?>assets/img/sponsor_banner_default.jpg"/>
+                -->
+            <div class="small_banner" id="banner_image1">
+                <div class="banner_title">Banner Image 1</div>
+                <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
+                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
+            </div>
+            <div class="small_banner"  id="banner_image2">
+                <div class="banner_title">Banner Image 2</div>
+                <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
+                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
+            </div>
+            <div class="small_banner"  id="banner_image3">
+                <div class="banner_title">Banner Image 3</div>
+                <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
+                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
+            </div>
+            <div class="small_banner"  id="banner_image4">
+                <div class="banner_title">Banner Image 4</div>
+                <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
+                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
+            </div>
+
+            <input type="file" class="custom-file-input" id="banner_img_file" style="display:none">
+
+            <div class="text-right">
+                 <button id="hr_save_banner" type="button" class="btn btn-success"><i class="fa fa-check"></i> Save Banner Settings</button>
+            </div>
         </div>
+       
     </div>
     <hr />
 

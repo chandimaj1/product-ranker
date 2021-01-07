@@ -1201,9 +1201,18 @@ function fetch_banner_info(){
             if (data.msg=="success"){
                 console.log(data);
                 console.log("Banner Info fetch success...");
-                $('#banner_link_url').val(data.url);
-                $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.filename);
-                $('#hr_admin_banner_img').attr('file_name',data.filename);
+                $('#banner_image1 img').attr('src',ajax_url+'../assets/img/'+data.banner1);
+                $('#banner_image1 img').attr('file_name',data.banner1);
+                $('#banner_image1 .bannerlink').val(data.url1);
+                $('#banner_image2 img').attr('src',ajax_url+'../assets/img/'+data.banner2);
+                $('#banner_image2 img').attr('file_name',data.banner2);
+                $('#banner_image2 .bannerlink').val(data.url2);
+                $('#banner_image3 img').attr('src',ajax_url+'../assets/img/'+data.banner3);
+                $('#banner_image3 img').attr('file_name',data.banner3);
+                $('#banner_image3 .bannerlink').val(data.url3);
+                $('#banner_image4 img').attr('src',ajax_url+'../assets/img/'+data.banner4);
+                $('#banner_image4 img').attr('file_name',data.banner4);
+                $('#banner_image4 .bannerlink').val(data.url4);
                 
 
             }else{
@@ -1221,21 +1230,23 @@ function fetch_banner_info(){
 
 
 function hr_upload_banner_img(){
-    $('#hr_upload_banner_img').click(function(){
-        hr_status('secondary','Select Banner imag & click upload.');
+    $('.small_banner button').click(function(){
+        hr_status('secondary','Select Banner image & click upload.');
         $('#banner_img_file').trigger('click');
+
+        let change_image_of = $(this.parentElement).attr('id');
 
         $('#banner_img_file').off('change').on('change',function(){
             if ($.inArray($('#banner_img_file').val().split('.').pop().toLowerCase(), ['jpg', 'png']) == -1) {
                 hr_status('danger','Only jpg and png files are allowed.');
             }else{
-                do_banner_image_upload();
+                do_banner_image_upload(change_image_of);
             }
         });
     });
 }
 
-function do_banner_image_upload(){
+function do_banner_image_upload(banner_image_id){
 
     const file = $('#banner_img_file')[0].files[0];
     /**
@@ -1264,6 +1275,7 @@ function do_banner_image_upload(){
         // add assoc key values, this will be posts values
         formData.append("file", this.file, this.getName());
         formData.append("upload_file", true);
+        formData.append("image_id", banner_image_id);
         console.log("uploading banner img..");
 
         $.ajax({
@@ -1283,9 +1295,10 @@ function do_banner_image_upload(){
                 console.log("file uploaded...");
 
                 if(data.upload=="success"){
-                    hr_status('success','Banner Image Uploaded.');
-                    $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.file_name);
-                    $('#hr_admin_banner_img').attr('file_name',data.file_name);
+                    hr_status('success','Image Uploaded. Save to apply changes.');
+                    $('#'+banner_image_id+' img').attr('src',ajax_url+'../assets/img/'+data.file_name);
+                    $('#'+banner_image_id+' img').attr('file_name',data.file_name);
+                    $('#banner_img_file').val('');
                 }
             },
             error: function (error) {
@@ -1328,8 +1341,14 @@ function do_banner_image_upload(){
 function hr_update_banner(){
 
     $('#hr_save_banner').click(function(){
-        let filename = $('#hr_admin_banner_img').attr('file_name');
-        let url = $('#banner_link_url').val();
+        let banner_image1 = $('#banner_image1 img').attr('file_name');
+        let banner_image2 = $('#banner_image2 img').attr('file_name');
+        let banner_image3 = $('#banner_image3 img').attr('file_name');
+        let banner_image4 = $('#banner_image4 img').attr('file_name');
+        let banner_url1 = $('#banner_image1 .bannerlink').val();
+        let banner_url2 = $('#banner_image2 .bannerlink').val();
+        let banner_url3 = $('#banner_image3 .bannerlink').val();
+        let banner_url4 = $('#banner_image4 .bannerlink').val();
 
         hr_status('secondary','Updating Banner...');
 
@@ -1338,8 +1357,14 @@ function hr_update_banner(){
             crossDomain: true,
             url:ajax_url+'update_banner.php',
             data :{
-                filename: filename,
-                url: url,
+                banner_image1: banner_image1,
+                banner_image2: banner_image2,
+                banner_image3: banner_image3,
+                banner_image4: banner_image4,
+                banner_url1: banner_url1,
+                banner_url2: banner_url2,
+                banner_url3: banner_url3,
+                banner_url4: banner_url4
             },
 
             success: function(data)

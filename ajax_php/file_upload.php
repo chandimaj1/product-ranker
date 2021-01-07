@@ -49,6 +49,7 @@ function save_csv_in_table($target_file){
                 $device = trim($csvData[2]);
                 $price = trim($csvData[3]);
                     $price = str_replace('$','',$price);
+                    $price = str_replace(',','',$price);
                     $price = (float)$price;
                 $value = trim($csvData[4]);
                     $value = (int)$value;

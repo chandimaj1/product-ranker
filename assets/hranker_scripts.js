@@ -138,6 +138,7 @@
                             hr_status('danger','Results not found for current search...');
                     }else{
                             hr_status('danger','Results not found...');
+                            $('#hr_search_input_group').removeClass('hr_locked');
                     }
                 }
             },
@@ -169,7 +170,7 @@
                 <td class="hrt_rank">`+item.rank+`</td>
                 <td class="hrt_brand">`+item.brand+`</td>
                 <td class="hrt_device">`+item.device+`</td>
-                <td class="hrt_price">`+item.price+`</td>
+                <td class="hrt_price">`+pretify_price(item.price)+`</td>
                 <td class="hrt_value">`+item.value+`</td>`
                 +row_principle+
                 `<td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
@@ -183,6 +184,21 @@
             $('#hranker_table').removeClass('hr_locked');
         });  
     }
+
+    // Script to pretify price
+    function pretify_price(number, decPlaces, decSep, thouSep) {
+        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+        decSep = typeof decSep === "undefined" ? "." : decSep;
+        thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+        var sign = number < 0 ? "-" : "";
+        var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+        var j = (j = i.length) > 3 ? j % 3 : 0;
+        
+        return sign +
+            (j ? i.substr(0, j) + thouSep : "") +
+            i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+            (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+     }
     
     function format_comma_seperated_text(text){
         let items = text.split(',');
@@ -291,9 +307,11 @@
     
     
         //Select 2
+        if (window.matchMedia("(min-width: 1024px)").matches) {
         $("#filter_brand").select2("destroy").select2({dropdownPosition: 'below'});
         $("#filter_principle").select2("destroy").select2({dropdownPosition: 'below'});
         $("#filter_genre").select2("destroy").select2({dropdownPosition: 'below'});
+        }
     }
     
     
@@ -596,10 +614,15 @@ function fetch_banner_info(){
             if (data.msg=="success"){
                 console.log(data);
                 console.log("Banner Info fetch success...");
-                $('#banner_link_url').val(data.url);
-                $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.filename);
-                $('#hr_admin_banner_img').attr('file_name',data.filename);
                 
+                $('#banner1 img').attr('src',ajax_url+'../assets/img/'+data.banner1);
+                $('#banner1 a').attr('href',data.url1);
+                $('#banner2 img').attr('src',ajax_url+'../assets/img/'+data.banner2);
+                $('#banner2 a').attr('href',data.url2);
+                $('#banner3 img').attr('src',ajax_url+'../assets/img/'+data.banner3);
+                $('#banner3 a').attr('href',data.url3);
+                $('#banner4 img').attr('src',ajax_url+'../assets/img/'+data.banner4);
+                $('#banner4 a').attr('href',data.url4);
 
             }else{
                 console.log("Error... ");
@@ -629,19 +652,26 @@ function fetch_banner_info(){
      * Execute functions on DOM ready
      * 
      */
+
     $(document).ready(function() {
         console.log('HRanker Product Manager - Scripts Ready()');
 
-        //Select 2
-        $("#filter_brand").select2({dropdownPosition: 'below'});
-        $("#filter_principle").select2({dropdownPosition: 'below'});
-        $("#filter_genre").select2({dropdownPosition: 'below'});
+        if (window.matchMedia("(min-width: 1024px)").matches) {
+            //Select 2
+              $("#filter_brand").select2({dropdownPosition: 'below'});
+              $("#filter_principle").select2({dropdownPosition: 'below'});
+              $("#filter_genre").select2({dropdownPosition: 'below'});
+          }
         
         $(window).on('resize', function(){
+
+            if (window.matchMedia("(min-width: 1024px)").matches) {
             //Select 2
             $("#filter_brand").select2("destroy").select2({dropdownPosition: 'below'});
             $("#filter_principle").select2("destroy").select2({dropdownPosition: 'below'});
             $("#filter_genre").select2("destroy").select2({dropdownPosition: 'below'});
+            }
+            
         });
     
      // --- Execute Front end page specific functions   

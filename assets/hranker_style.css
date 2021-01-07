@@ -71,6 +71,8 @@
         opacity: 1;
     }
 
+    
+
 .hr_sort .fa{
     position: absolute;
     bottom:0px;
@@ -104,6 +106,9 @@
     color:#444;
 }
 
+.hrt_price {
+    text-align: right;
+}
 
 #hranker_table thead tr{
     height:45px;
@@ -425,6 +430,19 @@ tr.selected_row{
 }
 
 #sponsors_area{
+    /*
     border-top:solid 2px #149fc2;
     border-bottom:solid 2px #149fc2;
+    */
+}
+
+.bannerclass{
+    border: solid 1px #ccc;
+    text-align: center;
+}
+.bannerclass img{
+    width: 100%;
+    max-width: 128px;
+    margin-bottom: 0px !important;
+    margin:5px !important;
 }

@@ -175,11 +175,17 @@ class headphoneRanker
             headphones_html TEXT,
             iem_html TEXT,
             earbuds_html TEXT,
-            banner_img TEXT,
-            banner_url TEXT,
+            banner_image1 TEXT,
+            banner_image2 TEXT,
+            banner_image3 TEXT,
+            banner_image4 TEXT,
+            banner_url1 TEXT,
+            banner_url2 TEXT,
+            banner_url3 TEXT,
+            banner_url4 TEXT,
             PRIMARY KEY  (id))';
             $sql_insert = "INSERT INTO $table_name
-            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -','sponsor_banner_default.jpg','')";
+            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -','small_banner_default.jpg','small_banner_default.jpg','small_banner_default.jpg','small_banner_default.jpg','')";
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             dbDelta($sql);
             dbDelta($sql_insert);

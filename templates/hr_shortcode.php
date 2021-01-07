@@ -98,12 +98,20 @@ if (! defined( 'ABSPATH') ){
     </div>
 </div>
 
+
 <div class="container" id="sponsors_area">
     <div class="row">
-        <div class="col-sm-12 text-center">
-            <a href="" target="_blank">
-                <img id="hr_admin_banner_img" src="/wp-content/plugins/headphone_ranker/assets/loading.gif">
-            </a>
+        <div class="col-sm-3 m-0 p-0 text-center bannerclass" id="banner1">
+            <a href="#" target="_blank"><img src="<?= $plugin_url ?>assets/img/small_banner_default.jpg"></a>
+        </div>
+        <div class="col-sm-3 m-0 p-0 text-center bannerclass" id="banner2">
+            <a href="#" target="_blank"><img src="<?= $plugin_url ?>assets/img/small_banner_default.jpg"></a>
+        </div>
+        <div class="col-sm-3 m-0 p-0 text-center bannerclass" id="banner3">
+            <a href="#" target="_blank"><img src="<?= $plugin_url ?>assets/img/small_banner_default.jpg"></a>
+        </div>
+        <div class="col-sm-3 m-0 p-0 text-center bannerclass" id="banner4">
+            <a href="#" target="_blank"><img src="<?= $plugin_url ?>assets/img/small_banner_default.jpg"></a>
         </div>
     </div>
 </div>
