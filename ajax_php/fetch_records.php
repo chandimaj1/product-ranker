@@ -309,49 +309,6 @@ $paginationHtml = create_paginationHTML($total_pages, $request_page);
     }
 
 
-    function format_filters_brand($brand){
-        if ($brand){
-            $filter_formatted = array();
-            //echo ("filter array:"); 
-             //var_dump($filter_array);
-            foreach ($brand as $term){
-                $term = $term[0];
-                //echo ("Term:");
-                //var_dump($term);
-
-                if ( isset($term) && $term!="" && strpos($term, ' ') !== false) {
-                    $term_split = explode( ' ', $term );
-                //  echo('term split:');
-                // var_dump($term_split);
-
-                    //foreach ($term_split as $t){
-                        $t = $term_split[0];
-                        $t = ltrim($t); //Remove Spaces at begining
-                        $t = rtrim($t); //Remove Spaces at end
-
-                        if ($t != ""){ //Remove Empty $t values
-                            array_push($filter_formatted,$t);
-                        }
-                    //}
-                }else if( $term!="" ){
-                    array_push($filter_formatted,$term);
-                }
-            }
-            //var_dump($filter_formatted);
-
-            $filter_formatted = array_unique($filter_formatted); //Remove duplicates
-            //var_dump($filter_formatted);
-            sort($filter_formatted); //Sort Ascending
-            //var_dump($filter_formatted); 
-        }else{
-            $filter_formatted = false;
-        }
-        
-
-        return ($filter_formatted);
-    }
-
-
 function get_filters($table){
     global $wpdb;
     $principle = false;
@@ -372,7 +329,7 @@ function get_filters($table){
 
         if( $principle ){ $principle_filters = format_filters($principle);} else { $principle_filters = false;}
         if( $genre ){ $genre_filters = format_filters($genre);} else { $genre_filters = false;}
-        if( $brand ){ $brand_filters = format_filters_brand($brand);} else { $brand_filters = false;}
+        if( $brand ){ $brand_filters = format_filters($brand);} else { $brand_filters = false;}
         $msg = "success";
     }
 
