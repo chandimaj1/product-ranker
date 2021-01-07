@@ -100,8 +100,10 @@ if (! defined( 'ABSPATH') ){
 
 <div class="container" id="sponsors_area">
     <div class="row">
-        <div class="col-sm-12">
-
+        <div class="col-sm-12 text-center">
+            <a href="" target="_blank">
+                <img id="hr_admin_banner_img" src="/wp-content/plugins/headphone_ranker/assets/loading.gif">
+            </a>
         </div>
     </div>
 </div>

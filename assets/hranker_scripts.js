@@ -564,6 +564,56 @@ function handle_social_share(){
     window.Sharer.init();
     console.log('SocialShare Initialized...');
 }
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ *  Sponsored Banner
+ * 
+ */
+function fetch_banner_info(){
+
+    $.ajax({     
+        type: "GET",
+        crossDomain: true,
+        url:ajax_url+'fetch_banner_info.php',
+
+        success: function(data)
+        {   
+           
+            try {
+                data = JSON.parse(data);
+              }
+              catch (e) {
+                console.log("error: "+e);
+              };
+
+            if (data.msg=="success"){
+                console.log(data);
+                console.log("Banner Info fetch success...");
+                $('#banner_link_url').val(data.url);
+                $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.filename);
+                $('#hr_admin_banner_img').attr('file_name',data.filename);
+                
+
+            }else{
+                console.log("Error... ");
+                console.log(data);
+            }
+        },
+
+        error: function(e)
+        {
+            console.log(e);
+        }
+    });
+}
+
     
     /**
      * 
@@ -594,7 +644,7 @@ function handle_social_share(){
             $("#filter_genre").select2("destroy").select2({dropdownPosition: 'below'});
         });
     
-     // --- Execute Admin page specific functions   
+     // --- Execute Front end page specific functions   
 
          hr_listen_sort(); // Sorting
 
@@ -613,6 +663,9 @@ function handle_social_share(){
 
          //Handle Share
          handle_social_share();
+
+         //Fetch Banner Info
+         fetch_banner_info();
        
     });
 

@@ -179,7 +179,7 @@ class headphoneRanker
             banner_url TEXT,
             PRIMARY KEY  (id))';
             $sql_insert = "INSERT INTO $table_name
-            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -','default.jpg','#')";
+            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -','sponsor_banner_default.jpg','')";
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             dbDelta($sql);
             dbDelta($sql_insert);

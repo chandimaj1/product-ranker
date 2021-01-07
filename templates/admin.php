@@ -22,6 +22,11 @@ if (! defined( 'ABSPATH') ){
 <div class="container" id="admin-container">
     <div class="row" style="margin-top:10px !important;">
             <h5 id="admin-title">Headphone Ranker Plugin</h5>
+
+        <div class="col-sm-12" id="hr_stats_row" style="position:fixed; right:5px; top:5px;">
+            <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
+            <div id="hr_message" class="text-right">Retrieving ...</div>
+        </div>
     </div>
 
 
@@ -48,14 +53,14 @@ if (! defined( 'ABSPATH') ){
         <div class="col-sm-6 text-right">
             <div class="input-group mb-3">
                 <span class="input-group-text" id="banner_link_label" style="font-size:10pt;">Link Banner to:</span>
-                <input type="text" class="form-control" placeholder="URL" aria-label="URL" aria-describedby="banner_link_label">
+                <input id="banner_link_url" type="text" class="form-control" placeholder="URL" aria-label="URL" aria-describedby="banner_link_label">
             </div>
             <input type="file" class="custom-file-input" id="banner_img_file" style="display:none">
             <button id="hr_upload_banner_img" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> Banner Image</button>
-            <button id="hr_category_html" type="button" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
+            <button id="hr_save_banner" type="button" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
         </div>
         <div class="col-sm-6">
-            <img id="hr_admin_banner_img" src="<?= $plugin_url ?>assets/img/sponsor_banner_default.jpg"/>
+            <img id="hr_admin_banner_img" file_name="sponsor_banner_default.jpg" src="<?= $plugin_url ?>assets/img/sponsor_banner_default.jpg"/>
         </div>
     </div>
     <hr />
@@ -135,12 +140,6 @@ if (! defined( 'ABSPATH') ){
 
 
 <div class="container">
-    <div class="row">
-        <div class="col-sm-12" id="hr_stats_row" style="position:relative">
-            <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
-            <div id="hr_message" class="text-right">Retrieving ...</div>
-        </div>
-    </div>
     <div class="row" id="data_table_container">
         <table id="hranker_table" hr_showing="headphones" class="col-sm-12">
             <thead class="hr_locked">

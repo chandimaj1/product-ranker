@@ -1170,14 +1170,56 @@ function fetch_frontend_html(){
 
 
 
-    /**
+/**
  * 
  * 
  * 
  * 
- * Upload Banner Img
+ * 
+ * 
+ * 
+ *  Sponsored Banner
  * 
  */
+function fetch_banner_info(){
+
+    $.ajax({     
+        type: "GET",
+        crossDomain: true,
+        url:ajax_url+'fetch_banner_info.php',
+
+        success: function(data)
+        {   
+           
+            try {
+                data = JSON.parse(data);
+              }
+              catch (e) {
+                console.log("error: "+e);
+              };
+
+            if (data.msg=="success"){
+                console.log(data);
+                console.log("Banner Info fetch success...");
+                $('#banner_link_url').val(data.url);
+                $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.filename);
+                $('#hr_admin_banner_img').attr('file_name',data.filename);
+                
+
+            }else{
+                console.log("Error... ");
+                console.log(data);
+            }
+        },
+
+        error: function(e)
+        {
+            console.log(e);
+        }
+    });
+}
+
+
 function hr_upload_banner_img(){
     $('#hr_upload_banner_img').click(function(){
         hr_status('secondary','Select Banner imag & click upload.');
@@ -1242,6 +1284,8 @@ function do_banner_image_upload(){
 
                 if(data.upload=="success"){
                     hr_status('success','Banner Image Uploaded.');
+                    $('#hr_admin_banner_img').attr('src',ajax_url+'../assets/img/'+data.file_name);
+                    $('#hr_admin_banner_img').attr('file_name',data.file_name);
                 }
             },
             error: function (error) {
@@ -1274,6 +1318,58 @@ function do_banner_image_upload(){
     upload.doUpload(file);
 }
 
+/**
+ * 
+ * 
+ * 
+ * 
+ * Save Banner info
+ */
+function hr_update_banner(){
+
+    $('#hr_save_banner').click(function(){
+        let filename = $('#hr_admin_banner_img').attr('file_name');
+        let url = $('#banner_link_url').val();
+
+        hr_status('secondary','Updating Banner...');
+
+        $.ajax({     
+            type: "POST",
+            crossDomain: true,
+            url:ajax_url+'update_banner.php',
+            data :{
+                filename: filename,
+                url: url,
+            },
+
+            success: function(data)
+            {   
+                console.log(data);
+                try {
+                    data = JSON.parse(data);
+                }
+                catch (e) {
+                    console.log("error: "+e);
+                };
+
+                if (data=="success"){
+                    console.log(data);
+                    console.log("Update success...");
+                    hr_status('success','Banner updated.');
+                    
+                }else{
+                    console.log("Error... ");
+                    console.log(data);
+                }
+            },
+
+            error: function(e)
+            {
+                console.log(e);
+            }
+        });
+    });
+}
 
 
 /**
@@ -1301,7 +1397,9 @@ $(document).ready(function() {
      hr_listen_sort(); // Sorting
      hr_upload_csv(); // CSV upload
      hr_search(); // Search
-     cancel_search()// Cancel Search
+     cancel_search();// Cancel Search
+     hr_upload_banner_img();//Banner Image upload
+     hr_update_banner();// Update banner
  
      //Onload fetch results
      get_table_results();
@@ -1313,6 +1411,7 @@ $(document).ready(function() {
      //$("#filter_principle, #filter_genre").select2();
 
      fetch_frontend_html();
+     fetch_banner_info();
  }
    
 })

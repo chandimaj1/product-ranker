@@ -418,3 +418,13 @@ tr.selected_row{
         display: block !important;
     }
 }
+
+#hr_admin_banner_img{
+    max-height: 150px;
+    margin-bottom:0px;
+}
+
+#sponsors_area{
+    border-top:solid 2px #149fc2;
+    border-bottom:solid 2px #149fc2;
+}
