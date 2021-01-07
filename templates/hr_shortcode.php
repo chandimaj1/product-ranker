@@ -21,8 +21,6 @@ if (! defined( 'ABSPATH') ){
 
 <div class="container" id="admin-container">
     <div class="row" style="margin-top:0px !important;">
-            <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
-            <div id="hr_message" class="text-right">Retrieving ...</div>
             <select id="admin_product_select" style="display:none !important">
                 <option value="<?= $atts["device"] ?>" selected><?= $atts["device"] ?></option>
             </select>
@@ -108,16 +106,27 @@ if (! defined( 'ABSPATH') ){
     </div>
 </div>
 
+
+
 <div class="container" id="hr_table_container">
+    <div class="row">
+        <div class="col-sm-12" id="hr_stats_row" style="position:relative">
+            <img id="hranker_loader" src="/wp-content/plugins/headphone_ranker/assets/loading.gif" />
+            <div id="hr_message" class="text-right">Retrieving ...</div>
+        </div>
+    </div>
     <div class="row" id="data_table_container">
+        
         <table id="hranker_table" hr_showing="headphones" class="col-sm-12 table-striped">
             <thead class="hr_locked">
                 <tr> 
                     <th class="hrt_rank" width="6%" data-toggle="tooltip" data-placement="top" title="Ranking: A (Best) to F (Worst)">
                         Rank<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div>
                     </th>
-                    <th class="hrt_device" width="13%" data-toggle="tooltip" data-placement="top" title="Brand and Model">
-                        <span id="hr_device_name">Device</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_brand" width="6%" data-toggle="tooltip" data-placement="top" title="Brand of the device">
+                        <span id="hr_brand_name">Brand</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
+                    <th class="hrt_device" width="6%" data-toggle="tooltip" data-placement="top" title="Model of the device">
+                        <span id="hr_device_name">Model</span><div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_price" width="8%" data-toggle="tooltip" data-placement="top" title="Original Cost">
                         Price($)<div class="hr_sort"><i class="fa fa-sort-up"></i> <i class="fa fa-sort-down"></i></div></th>
                     <th class="hrt_value" width="6%" data-toggle="tooltip" data-placement="top" title="Worth of headphone compared to price">

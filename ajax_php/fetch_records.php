@@ -46,7 +46,7 @@ function fetch_paginated_result_ids(){
 
         //-- Brand
         if(  isset($_POST['filter_brand'])  &&  ($_POST['filter_brand'] != "any")  ){
-            $filter_sql = "( device LIKE BINARY '".$_POST['filter_brand']."%')";
+            $filter_sql = "( brand LIKE BINARY '".$_POST['filter_brand']."%')";
         }else{
             $filter_brand = false;
         }
@@ -110,9 +110,9 @@ function fetch_paginated_result_ids(){
             $search_text = sanitize_text_field( $_POST['search'] );
 
             if( $_POST['table']=="headphones" ){
-                $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
+                $sql = "SELECT DISTINCT id FROM $select_from WHERE (brand like '%$search_text%') OR (device like '%$search_text%') OR (principle like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
             }else if ( $_POST['table']=="iem" || $_POST['table']=="earbuds" ){
-                $sql = "SELECT DISTINCT id FROM $select_from WHERE (device like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
+                $sql = "SELECT DISTINCT id FROM $select_from WHERE (brand like '%$search_text%') OR (device like '%$search_text%') OR (ganre_focus like '%$search_text%') ";
             }
         }else if (  $filter_brand || $filter_principle || $filter_genre || $filter_price  ){
             $sql = "SELECT DISTINCT id FROM $table_name WHERE $filter_sql";
@@ -364,10 +364,10 @@ function get_filters($table){
         if ( $table == "headphones" ){
             $principle = $wpdb->get_results( "SELECT DISTINCT principle FROM $table_name ORDER BY principle ASC", ARRAY_N);
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
-            $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
+            $brand = $wpdb->get_results( "SELECT DISTINCT brand FROM $table_name ORDER BY device ASC", ARRAY_N);
         }else if( $table == "iem" || $table == "earbuds" ){
             $genre = $wpdb->get_results( "SELECT DISTINCT ganre_focus FROM $table_name ORDER BY ganre_focus ASC", ARRAY_N);
-            $brand = $wpdb->get_results( "SELECT DISTINCT device FROM $table_name ORDER BY device ASC", ARRAY_N);
+            $brand = $wpdb->get_results( "SELECT DISTINCT brand FROM $table_name ORDER BY device ASC", ARRAY_N);
         }
 
         if( $principle ){ $principle_filters = format_filters($principle);} else { $principle_filters = false;}

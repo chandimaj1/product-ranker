@@ -18,6 +18,7 @@ function save_settings_table($row){
             $data = array(
                 'id' => (int)$row['id'], 
                 'rank' => $row['rank'], 
+                'brand' => $row['brand'], 
                 'device' => $row['device'],
                 'price' => $row['price'],
                 'value'=> $row['value'],
@@ -28,6 +29,7 @@ function save_settings_table($row){
             );
             $data_definitions = array (
                 '%d',
+                '%s',
                 '%s',
                 '%s',
                 '%f',
@@ -43,6 +45,7 @@ function save_settings_table($row){
             $data = array(
                 'id' => (int)$row['id'], 
                 'rank' => $row['rank'], 
+                'brand' => $row['brand'], 
                 'device' => $row['device'],
                 'price' => $row['price'],
                 'value'=> $row['value'],
@@ -53,6 +56,7 @@ function save_settings_table($row){
             );
             $data_definitions = array (
                 '%d',
+                '%s',
                 '%s',
                 '%s',
                 '%f',

@@ -19,6 +19,7 @@ function hr_new_entry(){
             <tr id="hrt_add_new_row">
                 <td></td>
                 <td><input id="hrt_anr_rank" class="form-control" type="text"></td>
+                <td><input id="hrt_anr_brand" class="form-control" type="text"></td>
                 <td><input id="hrt_anr_device" class="form-control" type="text"></td>
                 <td><input id="hrt_anr_price" class="form-control" type="number" placeholder="$"></td>
                 <td><input id="hrt_anr_value" class="form-control" type="number"></td>
@@ -97,6 +98,7 @@ function save_new_row(){
         ajax_data = {
             "table":$('#admin_product_select').val(),
             "rank" :$('#hrt_anr_rank').val(),
+            "brand" :$('#hrt_anr_brand').val(),
             "device" :$('#hrt_anr_device').val(),
             "price" :$('#hrt_anr_price').val(),
             "value" :$('#hrt_anr_value').val(),
@@ -110,6 +112,7 @@ function save_new_row(){
         ajax_data = {
             "table":$('#admin_product_select').val(),
             "rank" :$('#hrt_anr_rank').val(),
+            "brand" :$('#hrt_anr_brand').val(),
             "device" :$('#hrt_anr_device').val(),
             "price" :$('#hrt_anr_price').val(),
             "value" :$('#hrt_anr_value').val(),
@@ -144,7 +147,7 @@ function save_new_row(){
                 if (data=="success"){
                     console.log("Settings saved successfully...");
                     hr_status('success','Settings saved !...');
-                    get_table_results();
+                    refresh_table();
                 }else{
                     console.log("Error... ");
                     console.log(data);
@@ -354,6 +357,12 @@ function refresh_table(){
         $('#hranker_table tbody').html('');
         $('#hr_search_term').val('');
 
+        $('#filter_brand').val('any');
+        $('#filter_principle').val('any');
+        $('#filter_genre').val('any');
+        $('#hr_price_from').val(0);
+        $('#hr_price_to').val(0);
+
         $('#hr_search_input_group').removeClass('hr_search_active');
 
         $('#pagination').attr( 'current_page' , '1' );
@@ -550,6 +559,7 @@ function edit_a_row(selected_row){
         `<tr class="hrt_edit_row" edit_row_id="`+selected_row.attr('id')+`">
             <td></td>
             <td><input id="hrt_er_rank" class="form-control" type="text" value="`+selected_row.children('.hrt_rank').text()+`"></td>
+            <td><input id="hrt_er_brand" class="form-control" type="text" value="`+selected_row.children('.hrt_brand').text()+`"></td>
             <td><input id="hrt_er_device" class="form-control" type="text" value="`+selected_row.children('.hrt_device').text()+`"></td>
             <td><input id="hrt_er_price" class="form-control" type="number" placeholder="$" value="`+selected_row.children('.hrt_price').text()+`"></td>
             <td><input id="hrt_er_value" class="form-control" type="number" value="`+selected_row.children('.hrt_value').text()+`"></td>
@@ -596,6 +606,7 @@ function save_edited_row(){
                 "table":$('#admin_product_select').val(),
                 "id":$(this).attr('edit_row_id'),
                 "rank" :$(this).find('#hrt_er_rank').val(),
+                "brand" :$(this).find('#hrt_er_brand').val(),
                 "device" :$(this).find('#hrt_er_device').val(),
                 "price" :$(this).find('#hrt_er_price').val(),
                 "principle" :$(this).find('#hrt_er_principle').val(),
@@ -610,6 +621,7 @@ function save_edited_row(){
                 "table":$('#admin_product_select').val(),
                 "id":$(this).attr('edit_row_id'),
                 "rank" :$(this).find('#hrt_er_rank').val(),
+                "brand" :$(this).find('#hrt_er_brand').val(),
                 "device" :$(this).find('#hrt_er_device').val(),
                 "price" :$(this).find('#hrt_er_price').val(),
                 "value" :$(this).find('#hrt_er_value').val(),
@@ -817,6 +829,7 @@ function add_data_to_table(data){
         `<tr id="`+item.id+`">
             <td class="hrt_select"><input type="checkbox" class="form_control"/></td>
             <td class="hrt_rank">`+item.rank+`</td>
+            <td class="hrt_brand">`+item.brand+`</td>
             <td class="hrt_device">`+item.device+`</td>
             <td class="hrt_price">`+item.price+`</td>
             <td class="hrt_value">`+item.value+`</td>`

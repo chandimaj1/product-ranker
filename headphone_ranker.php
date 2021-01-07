@@ -114,7 +114,8 @@ class headphoneRanker
         if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
             $sql = 'CREATE TABLE '.$table_name.'(
             id INTEGER NOT NULL AUTO_INCREMENT,
-            rank VARCHAR(50),
+            rank VARCHAR(1),
+            brand VARCHAR(50),
             device VARCHAR(50),
             price VARCHAR(20),
             value INT(2), 
@@ -133,7 +134,8 @@ class headphoneRanker
         if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
             $sql = 'CREATE TABLE '.$table_name.'(
             id INTEGER NOT NULL AUTO_INCREMENT,
-            rank VARCHAR(50),
+            rank VARCHAR(1),
+            brand VARCHAR(50),
             device VARCHAR(50),
             price VARCHAR(20),
             value INT(2), 
@@ -151,7 +153,8 @@ class headphoneRanker
         if ($wpdb->get_var('SHOW TABLES LIKE '.$table_name) != $table_name) {
             $sql = 'CREATE TABLE '.$table_name.'(
             id INTEGER NOT NULL AUTO_INCREMENT,
-            rank VARCHAR(50),
+            rank VARCHAR(1),
+            brand VARCHAR(50),
             device VARCHAR(50),
             price VARCHAR(20),
             value INT(2),
@@ -172,9 +175,11 @@ class headphoneRanker
             headphones_html TEXT,
             iem_html TEXT,
             earbuds_html TEXT,
+            banner_img TEXT,
+            banner_url TEXT,
             PRIMARY KEY  (id))';
             $sql_insert = "INSERT INTO $table_name
-            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -')";
+            VALUES (1,'- Headphones HTML goes here -','- IEM HTML goes here -','- EarBuds HTML goes here -','default.jpg','#')";
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             dbDelta($sql);
             dbDelta($sql_insert);

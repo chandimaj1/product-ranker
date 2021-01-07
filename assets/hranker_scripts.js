@@ -42,6 +42,12 @@
         $('#hranker_table tbody').html('');
         $('#hr_search_term').val('');
 
+        $('#filter_brand').val('any');
+        $('#filter_principle').val('any');
+        $('#filter_genre').val('any');
+        $('#hr_price_from').val(0);
+        $('#hr_price_to').val(0);
+
         $('#hr_search_input_group').removeClass('hr_search_active');
 
         $('#pagination').attr( 'current_page' , '1' );
@@ -161,6 +167,7 @@
             let row = 
             `<tr id="`+item.id+`">
                 <td class="hrt_rank">`+item.rank+`</td>
+                <td class="hrt_brand">`+item.brand+`</td>
                 <td class="hrt_device">`+item.device+`</td>
                 <td class="hrt_price">`+item.price+`</td>
                 <td class="hrt_value">`+item.value+`</td>`

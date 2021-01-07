@@ -19,6 +19,7 @@ function save_table(){
         if ($_POST["table"]=="headphones"){
             $data = array(
                 'rank' => $_POST['rank'], 
+                'brand' => $_POST['brand'], 
                 'device' => $_POST['device'],
                 'price' => $_POST['price'],
                 'value'=> $_POST['value'],
@@ -28,6 +29,7 @@ function save_table(){
                 'ganre_focus'=> $_POST['ganre_focus'],
             );
             $data_definitions = array (
+                '%s',
                 '%s',
                 '%s',
                 '%f',
@@ -42,6 +44,7 @@ function save_table(){
         }else if( $_POST["table"]=="iem" || $_POST["table"]=="earbuds" ){
             $data = array(
                 'rank' => $_POST['rank'], 
+                'brand' => $_POST['brand'], 
                 'device' => $_POST['device'],
                 'price' => $_POST['price'],
                 'value'=> $_POST['value'],
@@ -51,6 +54,7 @@ function save_table(){
                 'ganre_focus'=> $_POST['ganre_focus'],
             );
             $data_definitions = array (
+                '%s',
                 '%s',
                 '%s',
                 '%f',
