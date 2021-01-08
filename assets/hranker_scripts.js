@@ -170,7 +170,7 @@
                 <td class="hrt_rank">`+item.rank+`</td>
                 <td class="hrt_brand">`+item.brand+`</td>
                 <td class="hrt_device">`+item.device+`</td>
-                <td class="hrt_price">`+pretify_price(item.price)+`</td>
+                <td class="hrt_price">$`+pretify_price(item.price)+`</td>
                 <td class="hrt_value">`+item.value+`</td>`
                 +row_principle+
                 `<td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
@@ -384,7 +384,7 @@
             hr_status('secondary','Searching...');
     
             const search_term = $('#hr_search_term').val();
-            let specialChars = "<>@!#%^&*()_+[]{}?:;|'\"\\,./~`="
+            let specialChars = "<>@%^*()_+[]{}?;|\"\\,./~`=";
             let check_chars = function(string){
                 for(i = 0; i < specialChars.length;i++){
                     if(string.indexOf(specialChars[i]) > -1){
@@ -402,13 +402,13 @@
     
             }else if( check_chars(search_term) != false ){
                 hr_status('danger','Invalid characters found in search term');
-                $('#hr_search_input_group').addClass('hr_search_active');
+                //$('#hr_search_input_group').addClass('hr_search_active');
                 $('#hr_search_input_group').removeClass('hr_locked');
     
             }else{
     
                 hr_status('secondary','Searching for "'+search_term+'" ...');
-                $('#hr_search_input_group').addClass('hr_search_active');
+                //$('#hr_search_input_group').addClass('hr_search_active');
     
                 get_table_results();
             }

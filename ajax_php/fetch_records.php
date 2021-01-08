@@ -29,7 +29,13 @@ function fetch_paginated_result_ids(){
 
         if ( isset($_POST["sort_by"])  &&  isset($_POST["sort_type"]) && $_POST["sort_by"]!="no_sort" &&  $_POST["sort_type"]!="no_sort" ){
             $sort_by = str_replace("hrt_","",$_POST['sort_by']);
-            $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
+
+            if( $sort_by != 'price' ){
+                $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
+            }else{
+                $sort = "ORDER BY ".$sort_by." * 1 ".$_POST['sort_type'];
+            }
+            
 
             //Reset Pagination
             $_POST['pagination']=1;
