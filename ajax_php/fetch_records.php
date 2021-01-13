@@ -25,20 +25,20 @@ function fetch_paginated_result_ids(){
     if( isset($_POST['table']) ){
         $table_name = $wpdb->prefix."hranker_".$_POST['table'];
 
-        $sort = 'ORDER BY id DESC';
+        $sort = 'ORDER BY rank ASC';
 
         if ( isset($_POST["sort_by"])  &&  isset($_POST["sort_type"]) && $_POST["sort_by"]!="no_sort" &&  $_POST["sort_type"]!="no_sort" ){
             $sort_by = str_replace("hrt_","",$_POST['sort_by']);
 
-            if( $sort_by != 'price' ){
-                $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
-            }else{
+            if( $sort_by == 'price' ){
                 $sort = "ORDER BY ".$sort_by." * 1 ".$_POST['sort_type'];
+            }else{
+                $sort = "ORDER BY ".$sort_by." ".$_POST['sort_type'];
             }
             
 
             //Reset Pagination
-            $_POST['pagination']=1;
+            //$_POST['pagination']=1;
         }
 
         $sql = "SELECT DISTINCT id FROM $table_name $sort";

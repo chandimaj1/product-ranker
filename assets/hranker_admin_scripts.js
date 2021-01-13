@@ -172,6 +172,31 @@ function save_new_row(){
 }
 
 
+/**
+ * 
+ * 
+ * 
+ * Download CSV
+ */
+function hr_download_csv(){
+    $('#hr_download_csv').click(function(){
+        let selected_category = $('#admin_product_select').val();
+        let download_file_name = selected_category + '_table_backup.csv';
+        let options = {
+            "separator": ",",
+            "newline": "\n",
+            "quoteFields": false,
+            "excludeColumns": ".hrt_select",
+            "excludeRows": "",
+            "trimContent": true,
+            "filename": download_file_name,
+            "appendTo": ""
+        }
+        
+        $('#hranker_table').table2csv('download', options)
+        
+    });
+}
 
 
 
@@ -362,6 +387,8 @@ function refresh_table(){
         $('#filter_genre').val('any');
         $('#hr_price_from').val(0);
         $('#hr_price_to').val(0);
+
+        $('#hr_download_csv').addClass('hr_locked');
 
         $('#hr_search_input_group').removeClass('hr_search_active');
 
@@ -736,6 +763,7 @@ function get_table_results(){
     $('#hr_delete_selected').addClass('hr_locked');
     $('#hr_search_input_group').addClass('hr_locked');
     $('#pagination').addClass('hr_locked');
+    $('#hr_download_csv').addClass('hr_locked');
 
     hr_status('secondary','Fetching results from database..');
 
@@ -810,6 +838,22 @@ function get_table_results(){
     });
 }
 
+
+ // Script to pretify price
+ function pretify_price(number, decPlaces, decSep, thouSep) {
+    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    decSep = typeof decSep === "undefined" ? "." : decSep;
+    thouSep = typeof thouSep === "undefined" ? "" : thouSep;
+    var sign = number < 0 ? "-" : "";
+    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+    var j = (j = i.length) > 3 ? j % 3 : 0;
+    
+    return sign +
+        (j ? i.substr(0, j) + thouSep : "") +
+        i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+        (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+ }
+
 function add_data_to_table(data){
     $('#hranker_table tbody').html('');
 
@@ -831,7 +875,7 @@ function add_data_to_table(data){
             <td class="hrt_rank">`+item.rank+`</td>
             <td class="hrt_brand">`+item.brand+`</td>
             <td class="hrt_device">`+item.device+`</td>
-            <td class="hrt_price">`+item.price+`</td>
+            <td class="hrt_price">`+pretify_price(item.price)+`</td>
             <td class="hrt_value">`+item.value+`</td>`
             +row_principle+
             `<td class="hrt_overall_timbre">`+format_comma_seperated_text(item.overall_timbre)+`</td>
@@ -843,6 +887,7 @@ function add_data_to_table(data){
         
         $('#hranker_table tbody').append(row);
         $('#hranker_table').removeClass('hr_locked');
+        $('#hr_download_csv').removeClass('hr_locked');
 
         //refresh row select event listners
         hr_table_rowselect();
@@ -945,7 +990,8 @@ function set_filters(filters, selected_filters){
     $('#hr_price_to').val( parseInt(selected_filters.to) );
  
     $('#filter_brand, #filter_principle, #filter_genre').off('change').on('change',function(){
-            get_table_results();
+        $('#hr_search_term').val('');    
+        get_table_results();
     });
 
     $('#hr_price_from, #hr_price_to').off('change').on('change',function(){
@@ -978,6 +1024,7 @@ function hr_listen_sort(){
             $('.hr_sort').removeClass('hr_sort_asc');
             $(this).addClass('hr_sort_desc');
         }
+        $('#pagination').arrt('current_page','1');
         get_table_results();
     });
 }
@@ -1020,47 +1067,56 @@ function get_sort_status(req){
  *  HR Search
  */
 function hr_search(){
-    $('#hr_search').on('click',function(){
-        $('#hranker_table thead').addClass('hr_locked');
-        $('#hranker_table tbody').addClass('hr_locked');
-        $('#hr_edit_selected').addClass('hr_locked');
-        $('#hr_delete_selected').addClass('hr_locked');
-        $('#hr_search_input_group').addClass('hr_locked');
-
-        hr_status('secondary','Searching...');
-
-        const search_term = $('#hr_search_term').val();
-        let specialChars = "<>@%^*()_+[]{}?;|\"\\,./~`=";
-        let check_chars = function(string){
-            for(i = 0; i < specialChars.length;i++){
-                if(string.indexOf(specialChars[i]) > -1){
-                    return true
-                }
-            }
-            return false;
-        }
-
-        if( typeof search_term == 'undefined' || search_term == '' ){
-            $('#hr_search_input_group').removeClass('hr_search_active');
-            hr_status('danger','Empty Search...');
-
-            get_table_results();
-
-        }else if( check_chars(search_term) != false ){
-            hr_status('danger','Invalid characters found in search term');
-            //$('#hr_search_input_group').addClass('hr_search_active');
-            $('#hr_search_input_group').removeClass('hr_locked');
-
-        }else{
-
-            hr_status('secondary','Searching for "'+search_term+'" ...');
-            //$('#hr_search_input_group').addClass('hr_search_active');
-
-            get_table_results();
+    $('#hr_search').click(function(){
+        do_search();
+    });
+    $('#hr_search_term').on('keypress',function(e) {
+        if(e.which == 13) {
+            do_search();
         }
     });
 }
 
+
+function do_search(){
+    $('#hranker_table thead').addClass('hr_locked');
+    $('#hranker_table tbody').addClass('hr_locked');
+    $('#hr_edit_selected').addClass('hr_locked');
+    $('#hr_delete_selected').addClass('hr_locked');
+    $('#hr_search_input_group').addClass('hr_locked');
+
+    hr_status('secondary','Searching...');
+
+    const search_term = $('#hr_search_term').val();
+    let specialChars = "<>@%^*()_+[]{}?;|\"\\,./~`=";
+    let check_chars = function(string){
+        for(i = 0; i < specialChars.length;i++){
+            if(string.indexOf(specialChars[i]) > -1){
+                return true
+            }
+        }
+        return false;
+    }
+
+    if( typeof search_term == 'undefined' || search_term == '' ){
+        $('#hr_search_input_group').removeClass('hr_search_active');
+        hr_status('danger','Empty Search...');
+
+        get_table_results();
+
+    }else if( check_chars(search_term) != false ){
+        hr_status('danger','Invalid characters found in search term');
+        //$('#hr_search_input_group').addClass('hr_search_active');
+        $('#hr_search_input_group').removeClass('hr_locked');
+
+    }else{
+
+        hr_status('secondary','Searching for "'+search_term+'" ...');
+        //$('#hr_search_input_group').addClass('hr_search_active');
+
+        get_table_results();
+    }
+}
 
 
 /**
@@ -1230,7 +1286,7 @@ function fetch_banner_info(){
 
 
 function hr_upload_banner_img(){
-    $('.small_banner button').click(function(){
+    $('.small_banner .btn-primary').click(function(){
         hr_status('secondary','Select Banner image & click upload.');
         $('#banner_img_file').trigger('click');
 
@@ -1243,6 +1299,12 @@ function hr_upload_banner_img(){
                 do_banner_image_upload(change_image_of);
             }
         });
+    });
+
+    $('.small_banner .btn-danger').click(function(){
+        let plugin_url = $('#hr_pluginurl').val();
+        $(this.parentElement).find('img').attr('src',plugin_url+'assets/img/small_banner_default.jpg');
+        $(this.parentElement).find('img').attr('file_name','small_banner_default.jpg');
     });
 }
 
@@ -1421,6 +1483,7 @@ $(document).ready(function() {
      hr_category_change();// category select change
      hr_listen_sort(); // Sorting
      hr_upload_csv(); // CSV upload
+     hr_download_csv();// Download CSV
      hr_search(); // Search
      cancel_search();// Cancel Search
      hr_upload_banner_img();//Banner Image upload

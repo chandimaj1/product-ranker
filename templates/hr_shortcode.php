@@ -84,7 +84,17 @@ if (! defined( 'ABSPATH') ){
         </div>
         <div class="col-md-6" id="search_div">
             <div class="row">
-                <label for="hr_search_input_group" class="small_label">Search Headphones</label>
+
+            <?php
+                if( $atts["device"]=="headphones" ){
+                    $search = "Headphones";
+                }else if( $atts["device"]=="iem" ){
+                    $search = "IEM/Earphones";
+                }else if( $atts["device"]=="earbuds" ){
+                    $search = "True Wireless Earbuds";
+                }
+            ?>
+                <label for="hr_search_input_group" class="small_label">Search <?= $search ?></label>
                 <div class="input-group hr_locked" id="hr_search_input_group">
                     <input type="text" id="hr_search_term" class="form-control" placeholder="Search by Brand, Model<?= $searchbytxt ?> or Genre" data-toggle="tooltip" data-placement="bottom" title="by headphone, principle or genre">
                     <button type="button" id="hr_search" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>

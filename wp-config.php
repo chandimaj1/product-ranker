@@ -1,9 +1,9 @@
 <?php
 # Database Configuration
 define( 'WPCACHEHOME', '/nas/wp/www/cluster-41366/orbheadphones/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
-define( 'DB_NAME', 'wp_majorhifistg' );
-define( 'DB_USER', 'majorhifistg' );
-define( 'DB_PASSWORD', 'OFWvqDNnKWGW3uq1Ph6n' );
+define( 'DB_NAME', 'wp_audio46v3' );
+define( 'DB_USER', 'audio46v3' );
+define( 'DB_PASSWORD', 'Pgew3oYvwbg0ndCyhXjp' );
 define( 'DB_HOST', '127.0.0.1' );
 define( 'DB_HOST_SLAVE', '127.0.0.1' );
 define( 'DB_CHARSET', 'utf8' );
@@ -29,7 +29,7 @@ define( 'NONCE_SALT', '[zE.-KYIU;bn;bfk9b/".!hMrX7y*E{~ _2mH900M~B3}CVn!{lRJ*+Ph
 
 define( 'WP_AUTO_UPDATE_CORE', false );
 
-define( 'PWP_NAME', 'majorhifistg' );
+define( 'PWP_NAME', 'audio46v3' );
 
 define( 'FS_METHOD', 'direct' );
 
@@ -39,7 +39,7 @@ define( 'FS_CHMOD_FILE', 0664 );
 
 define( 'PWP_ROOT_DIR', '/nas/wp' );
 
-define( 'WPE_APIKEY', '19fab22fd1045eec3d8f003de59e0fbbfaac1188' );
+define( 'WPE_APIKEY', '15c777aa95affb95b290365ccddafca22a2de6a0' );
 
 define( 'WPE_FOOTER_HTML', "" );
 
@@ -91,7 +91,7 @@ $wpe_no_cdn_uris=array ( );
 
 $wpe_content_regexs=array ( );
 
-$wpe_all_domains=array ( 0 => 'majorhifistg.wpengine.com', );
+$wpe_all_domains=array ( 0 => 'majorhifi.com', 1 => 'audio46v3.wpengine.com', 2 => 'www.majorhifi.com', );
 
 $wpe_varnish_servers=array ( 0 => 'pod-100417', );
 
@@ -101,9 +101,9 @@ $wpe_ec_servers=array ( );
 
 $wpe_largefs=array ( );
 
-$wpe_netdna_domains=array ( );
+$wpe_netdna_domains=array ( 0 =>  array ( 'zone' => '2pkv5041fpt42yueav2hquv1', 'match' => 'gamercans.com', 'secure' => true, 'dns_check' => '0', ), );
 
-$wpe_netdna_domains_secure=array ( );
+$wpe_netdna_domains_secure=array ( 0 =>  array ( 'zone' => '2pkv5041fpt42yueav2hquv1', 'match' => 'gamercans.com', 'secure' => true, 'dns_check' => '0', ), );
 
 $wpe_netdna_push_domains=array ( );
 

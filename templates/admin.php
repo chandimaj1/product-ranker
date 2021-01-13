@@ -56,25 +56,29 @@ if (! defined( 'ABSPATH') ){
             <div class="small_banner" id="banner_image1">
                 <div class="banner_title">Banner Image 1</div>
                 <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
-                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <button class="btn btn-primary"> <i class="fa fa-plus"></i> </button>
+                <button class="btn btn-danger"> <i class="fa fa-times"></i> </button>
                 <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
             </div>
             <div class="small_banner"  id="banner_image2">
                 <div class="banner_title">Banner Image 2</div>
                 <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
-                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <button class="btn btn-primary"> <i class="fa fa-plus"></i> </button>
+                <button class="btn btn-danger"> <i class="fa fa-times"></i> </button>
                 <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
             </div>
             <div class="small_banner"  id="banner_image3">
                 <div class="banner_title">Banner Image 3</div>
                 <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
-                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <button class="btn btn-primary"> <i class="fa fa-plus"></i> </button>
+                <button class="btn btn-danger"> <i class="fa fa-times"></i> </button>
                 <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
             </div>
             <div class="small_banner"  id="banner_image4">
                 <div class="banner_title">Banner Image 4</div>
                 <img id="" file_name="small_banner_default.jpg" src="<?= $plugin_url ?>assets/loading.gif"/>
-                <button class="btn btn-primary"> <i class="fa fa-upload"></i> Upload</button>
+                <button class="btn btn-primary"> <i class="fa fa-plus"></i> </button>
+                <button class="btn btn-danger"> <i class="fa fa-times"></i> </button>
                 <input type="text" class="form-control bannerlink" placeholder="Banner redirect link">
             </div>
 
@@ -94,6 +98,7 @@ if (! defined( 'ABSPATH') ){
             <div class=""><h6>Data Table Management:</h6></div>
             <button id="hr_new_entry" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> New</button>
             <button id="hr_upload_csv" type="button" class="btn btn-primary"><i class="fa fa-upload"></i> CSV</button>
+            <button id="hr_download_csv" type="button" class="btn btn-secondary hr_locked"><i class="fa fa-download"></i> CSV</button>
                 <div class="custom-file" style="display:none">
                     <input type="file" class="custom-file-input" id="csv_file">
                     <label class="custom-file-label" for="inputGroupFile04">select csv</label>

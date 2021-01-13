@@ -56,6 +56,7 @@ function save_csv_in_table($target_file){
                 $principle = trim($csvData[5]);
                 $overall_timbre = trim($csvData[6]);
                 $summary = trim($csvData[7]);
+                    $summary = stripslashes($summary);
                 $ganre_focus = trim($csvData[8]);
 
             }else if($_POST['table']=="iem" || $_POST['table']=="earbuds"){
@@ -67,11 +68,13 @@ function save_csv_in_table($target_file){
                 $device = trim($csvData[2]);
                 $price = trim($csvData[3]);
                     $price = str_replace('$','',$price);
+                    $price = str_replace(',','',$price);
                     $price = (float)$price;
                 $value = trim($csvData[4]);
                     $value = (int)$value;
                 $overall_timbre = trim($csvData[5]);
                 $summary = trim($csvData[6]);
+                    $summary = stripslashes($summary);
                 $ganre_focus = trim($csvData[7]);
             }
     

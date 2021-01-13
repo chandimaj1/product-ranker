@@ -15,6 +15,7 @@ function save_table(){
     if( isset($_POST['table']) && isset($_POST['device']) && isset($_POST['price']) && isset($_POST['rank'])){
         $table_name = $wpdb->prefix."hranker_".$_POST["table"];
 
+        $POST['summary'] = stripslashes($POST['summary']);
         //Headphones
         if ($_POST["table"]=="headphones"){
             $data = array(

@@ -9,10 +9,11 @@ if (!isset($wpdb)){
 function save_settings_table($row){
     global $wpdb;
     $msg = 'Error! Unknown';
-
     if( isset($row['table']) && isset($row['id'])  && isset($row['device']) && isset($row['price']) && isset($row['rank'])){
         $table_name = $wpdb->prefix."hranker_".$row['table'];
 
+        $row['summary'] = stripslashes($row['summary']);
+        
         //Headphones
         if($row['table']=="headphones"){
             $data = array(

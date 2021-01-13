@@ -210,6 +210,9 @@ class headphoneRanker
             wp_enqueue_script( 'headphoneranker_select2_scripts', plugins_url('/assets/select2/select2.full.js',__FILE__), array('jquery'));
             //Popper
             wp_enqueue_script( 'headphoneranker_popper_scripts', plugins_url('/assets/popper/popper.min.js',__FILE__), array('jquery'));
+            //Table2Csv
+            wp_enqueue_script( 'headphoneranker_table2csv_scripts', plugins_url('/assets/table2csv/table2csv.js',__FILE__), array('jquery'));
+
         }
     }
 

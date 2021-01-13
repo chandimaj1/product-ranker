@@ -293,8 +293,9 @@
         $('#hr_price_from').val( parseInt(selected_filters.from) );
         $('#hr_price_to').val( parseInt(selected_filters.to) );
      
-        $('#filter_brand, #filter_principle, #filter_genre').unbind('change').change(function(){
+        $('#filter_brand, #filter_principle, #filter_genre').off('change').on('change', function(){
            // if($('#filter_principle').val()!="any" || $('#filter_genre').val()!="any"){
+               $('#hr_search_term').val('');
                 get_table_results();
            // }
         });
@@ -332,6 +333,7 @@
                 $('.hr_sort').removeClass('hr_sort_asc');
                 $(this).addClass('hr_sort_desc');
             }
+            $('#pagination').arrt('current_page','1');
             get_table_results();
         });
     }
@@ -375,7 +377,18 @@
      */
     function hr_search(){
         $('#hr_search').click(function(){
-            $('#hranker_table thead').addClass('hr_locked');
+            do_search();
+        });
+        $('#hr_search_term').on('keypress',function(e) {
+            if(e.which == 13) {
+                do_search();
+            }
+        });
+    }
+    
+
+function do_search(){
+    $('#hranker_table thead').addClass('hr_locked');
             $('#hranker_table tbody').addClass('hr_locked');
             $('#hr_edit_selected').addClass('hr_locked');
             $('#hr_delete_selected').addClass('hr_locked');
@@ -412,8 +425,7 @@
     
                 get_table_results();
             }
-        });
-    }
+}
     
     
     
@@ -428,9 +440,7 @@
         });
     }
 
-
-
-    /***
+/***
  * 
  * 
  * 
